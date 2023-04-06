@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace Xpto.Core.Shared.Entities.Address
         Address Get(int code);
         IList<Address> List();
 
+        DataTable LoadDataTable();
 
 
     }

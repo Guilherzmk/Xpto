@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,9 +17,13 @@ namespace Xpto.UI.Shared.Entities
 {
     public partial class frmEmailRegister : Form
     {
-        public Email Email { get; set; }
-        public IList<Email> Emails { get; set; }
-        public bool Confirm { get; set; }
+        private Email _email;
+        private readonly IEmailService _emailService;
+        private Guid _id;
+
+        public Email Email => _email;
+
+
 
         public frmEmailRegister()
         {
@@ -32,16 +37,24 @@ namespace Xpto.UI.Shared.Entities
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
-            this.Email = new Email()
+            this._email = new Email()
             {
                 Type = txtType.Text,
                 Address = txtAddress.Text,
                 Note = txtNote.Text,
             };
-            this.Confirm = true;
-            this.Emails.Add(this.Email);
-            var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
+            if (this._id != Guid.Empty)
+                this._email.Id = this._id;
             this.Close();
+        }
+
+        public void LoadEmail(Email email)
+        {
+            this._id = email.Id;
+            this.txtType.Text = email.Type;
+            this.txtAddress.Text = email.Address;
+            this.txtNote.Text = email.Note;
+
         }
 
         private void frmEmailRegister_Load(object sender, EventArgs e)

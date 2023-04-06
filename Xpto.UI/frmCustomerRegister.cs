@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
+﻿using System.Data;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Xpto.Core.Customers;
-using Xpto.Core.Shared.Functions;
+using Xpto.Core.Shared.Entities.Address;
+using Xpto.Core.Shared.Entities.Email;
+using Xpto.Core.Shared.Entities.Phone;
 using Xpto.Services.Customers;
 using Xpto.UI.Shared.Entities;
 
@@ -17,10 +12,11 @@ namespace Xpto.UI.Customers
     public partial class frmCustomerRegister : Form
     {
 
-        public delegate void CustomerChangeDelegate(Customer customer);
-        public event CustomerChangeDelegate Change;
+
         private readonly ICustomerService _customerService;
-        Customer customer = new Customer();
+
+        private Customer Customer = new Customer();
+
         public bool Confirm { get; set; }
 
         public frmCustomerRegister(ICustomerService customerService)
@@ -41,41 +37,128 @@ namespace Xpto.UI.Customers
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
-            customer.Name = this.txtName.Text;
-            customer.Nickname = this.txtNickname.Text;
-            customer.BirthDate = this.dtpBirthDate.Value;
-            customer.PersonType = this.cboPersonType.Text;
-            customer.Identity = this.txtIdentity.Text;
-            customer.Note = this.txtNote.Text;
+            this.Save();
+        }
 
-            if (customer.Code == 0)
-            {
-                customer = _customerService.Create(customer);
-                var msgText = "Cliente criado com sucesso";
-                MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+        private void Save()
+        {
+            if (this.Customer.Code == 0)
+                this.Create();
             else
-            {
-                customer = _customerService.Update(customer);
-                var msgText = "Cliente atualizado com sucesso";
-                MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+                this.Update();
+
             this.Close();
+        }
+
+        private void Create()
+        {
+            try
+            {
+                var msg = MessageBox.Show("Cadastrar Cliente?", "Cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (msg != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                var customerParams = new CustomerCreateParams(this.txtName.Text)
+                {
+                    Nickname = this.txtNickname.Text,
+                    BirthDate = this.dtpBirthDate.Value,
+                    PersonType = this.cboPersonType.Text,
+                    Identity = this.txtIdentity.Text,
+                    Note = this.txtNote.Text,
+                    Addresses = Customer.Addresses,
+                    Phones = Customer.Phones,
+                    Emails = Customer.Emails,
+                };
+
+                var result = this._customerService.Create(customerParams);
+                if (this._customerService.Messages.Count > 0)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var message in this._customerService.Messages)
+                    {
+                        sb.AppendLine(message);
+                    }
+
+                    MessageBox.Show(sb.ToString(), "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    this.Customer = result;
+                    MessageBox.Show("Cliente cadastrado com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Update()
+        {
+            try
+            {
+                var msg = MessageBox.Show("Atualizar Cliente?", "Cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (msg != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                var customerParams = new CustomerUpdateParams()
+                {
+                    Name = this.txtName.Text,
+                    Nickname = this.txtNickname.Text,
+                    Identity = this.txtIdentity.Text,
+                    Note = this.txtNote.Text,
+                    BirthDate = this.dtpBirthDate.Value,
+                    PersonType = this.cboPersonType.Text,
+                    Addresses = Customer.Addresses,
+                    Emails = Customer.Emails,
+                    Phones = Customer.Phones,
+                };
+
+                Customer = this._customerService.Update(Customer.Id, customerParams);
+
+                MessageBox.Show("Cliente atualizado com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnAddAddress_Click(object sender, EventArgs e)
         {
-            AddAddress();
+            var frm = new frmAddressRegister();
+            frm.ShowDialog(this);
+
+            if (frm.Address != null)
+                this.Customer.Addresses.Add(frm.Address);
+
+            this.LoadAddresses();
         }
 
         private void btnAddPhone_Click(object sender, EventArgs e)
         {
-            AddPhone();
+            var frm = new frmPhoneRegister();
+            frm.ShowDialog(this);
+
+            if (frm.Phone != null)
+                this.Customer.Phones.Add(frm.Phone);
+
+            this.LoadPhones();
         }
 
         private void btnAddEmail_Click(object sender, EventArgs e)
         {
-            AddEmail();
+            var frm = new frmEmailRegister();
+            frm.ShowDialog(this);
+
+            if (frm.Email != null)
+                this.Customer.Emails.Add(frm.Email);
+            this.LoadEmails();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -83,54 +166,100 @@ namespace Xpto.UI.Customers
             this.Close();
         }
 
-        public void AddAddress()
-        {
-            var frm = new frmAddressRegister();
-            frm.Addresses = this.customer.Addresses;
-            frm.ShowDialog(this);
-            this.LoadAddresses();
-        }
-
-        public void AddEmail()
-        {
-            var frm = new frmEmailRegister();
-            frm.Emails = this.customer.Emails;
-            frm.ShowDialog(this);
-            this.LoadEmails();
-        }
-
-        public void AddPhone()
-        {
-            var frm = new frmPhoneRegister();
-            frm.Phones = this.customer.Phones;
-            frm.ShowDialog(this);
-            this.LoadPhones();
-        }
-
         public void LoadAddresses()
         {
-            var frm = new frmAddressRegister();
-            frm.Addresses = this.customer.Addresses;
-            this.dgvAddress.DataSource = frm.Addresses;
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Código");
+            dt.Columns.Add("Tipo");
+            dt.Columns.Add("Rua");
+            dt.Columns.Add("Número");
+            dt.Columns.Add("Complemento");
+            dt.Columns.Add("Distrito");
+            dt.Columns.Add("Cidade");
+            dt.Columns.Add("Estado");
+            dt.Columns.Add("CEP");
+            dt.Columns.Add("Anotações");
+
+            foreach (var item in this.Customer.Addresses)
+            {
+                var row = dt.Rows.Add(item.Id);
+                row[1] = item.Code;
+                row[2] = item.Type;
+                row[3] = item.Street;
+                row[4] = item.Number;
+                row[5] = item.Complement;
+                row[6] = item.District;
+                row[7] = item.City;
+                row[8] = item.State;
+                row[9] = item.ZipCode;
+                row[10] = item.Note;
+            }
+
+            this.dgvAddress.DataSource = dt;
+            this.dgvAddress.Columns["Id"].Visible = false;
+            this.dgvAddress.Columns["Código"].Visible = false;
+
         }
 
         public void LoadEmails()
         {
-            var frm = new frmEmailRegister();
-            frm.Emails = this.customer.Emails;
-            this.dgvEmail.DataSource = frm.Emails;
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Código");
+            dt.Columns.Add("Código do Cliente");
+            dt.Columns.Add("Tipo");
+            dt.Columns.Add("Endereço de Email");
+            dt.Columns.Add("Anotação");
+
+            foreach (var item in this.Customer.Emails)
+            {
+                var row = dt.Rows.Add(item.Id);
+                row[1] = item.Code;
+                row[2] = item.CustomerCode;
+                row[3] = item.Type;
+                row[4] = item.Address;
+                row[5] = item.Note;
+            }
+
+            this.dgvEmail.DataSource = dt;
+            this.dgvEmail.Columns["Id"].Visible = false;
+            this.dgvEmail.Columns["Código"].Visible = false;
+            this.dgvEmail.Columns["Código do Cliente"].Visible = false;
         }
 
         public void LoadPhones()
         {
-            var frm = new frmPhoneRegister();
-            frm.Phones = this.customer.Phones;
-            this.dgvPhone.DataSource = frm.Phones;
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Código");
+            dt.Columns.Add("Código do CLiente");
+            dt.Columns.Add("Tipo");
+            dt.Columns.Add("DDD");
+            dt.Columns.Add("Número");
+            dt.Columns.Add("Anotações");
+
+            foreach (var item in this.Customer.Phones)
+            {
+                var row = dt.Rows.Add(item.Id);
+                row[1] = item.Code;
+                row[2] = item.CustomerCode;
+                row[3] = item.Type;
+                row[4] = item.Ddd;
+                row[5] = item.Number;
+                row[6] = item.Note;
+            }
+
+            this.dgvPhone.DataSource = dt;
+            this.dgvPhone.Columns["Id"].Visible = false;
+            this.dgvPhone.Columns["Código"].Visible = false;
+            this.dgvPhone.Columns["Código do CLiente"].Visible = false;
+
         }
 
         public void LoadCustomer(Customer customer)
         {
-            this.customer = customer;
+            this.Customer = customer;
             this.txtName.Text = customer.Name;
             this.txtNickname.Text = customer.Nickname;
             this.txtIdentity.Text = customer.Identity;
@@ -145,7 +274,7 @@ namespace Xpto.UI.Customers
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (customer.Code == 0)
+            if (Customer.Code == 0)
             {
                 var msgText = "Não é possível apagar o cliente pois ele não existe";
                 MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -155,11 +284,120 @@ namespace Xpto.UI.Customers
                 var msgText = MessageBox.Show("Excluir Cliente?", "Cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (msgText != DialogResult.Yes) { return; }
 
-                this._customerService.Delete(customer.Code);
-                this.Change(customer);
+                this._customerService.Delete(Customer.Code);
+
                 this.Close();
                 MessageBox.Show("Cliente excluído com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void dgvAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var id = Guid.Parse(this.dgvAddress.SelectedRows[0].Cells[0].Value?.ToString());
+
+            Address address = null;
+            foreach (var item in Customer.Addresses)
+            {
+                if (item.Id == id)
+                {
+                    address = item;
+                    break;
+                }
+            }
+
+            if (address == null)
+                return;
+
+            var frm = new frmAddressRegister();
+            frm.LoadAddress(address);
+            frm.ShowDialog(this);
+
+            if (frm.Address != null)
+                for (int i = 0; i <= Customer.Addresses.Count - 1; i++)
+                {
+                    var item = Customer.Addresses[i];
+
+                    if (item.Id == id)
+                    {
+                        Customer.Addresses[i] = frm.Address;
+                        break;
+                    }
+                }
+            LoadAddresses();
+        }
+
+        private void dgvPhone_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var id = Guid.Parse(this.dgvPhone.SelectedRows[0].Cells[0].Value?.ToString());
+
+            Phone phone = null;
+            foreach (var item in Customer.Phones)
+            {
+                if (item.Id == id)
+                {
+                    phone = item;
+                    break;
+                }
+            }
+
+            if (phone == null)
+                return;
+
+            var frm = new frmPhoneRegister();
+            frm.LoadPhone(phone);
+            frm.ShowDialog(this);
+
+
+            if (frm.Phone != null)
+                for (int i = 0; i <= Customer.Phones.Count - 1; i++)
+                {
+                    var item = Customer.Phones[i];
+
+                    if (item.Id == id)
+                    {
+                        Customer.Phones[i] = frm.Phone;
+                        break;
+                    }
+                }
+
+            LoadPhones();
+        }
+
+        private void dgvEmail_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var id = Guid.Parse(this.dgvEmail.SelectedRows[0].Cells[0].Value?.ToString());
+
+            Email email = null;
+            foreach (var item in Customer.Emails)
+            {
+                if (item.Id == id)
+                {
+                    email = item;
+                    break;
+                }
+            }
+
+            if (email == null)
+                return;
+
+            var frm = new frmEmailRegister();
+            frm.LoadEmail(email);
+            frm.ShowDialog(this);
+
+            if (frm.Email != null)
+            {
+                for (int i = 0; i <= Customer.Emails.Count - 1; i++)
+                {
+                    var item = Customer.Emails[i];
+
+                    if (item.Id == id)
+                    {
+                        Customer.Emails[i] = frm.Email;
+                        break;
+                    }
+                }
+            }
+            LoadEmails();
         }
     }
 }

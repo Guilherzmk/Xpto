@@ -101,7 +101,6 @@ namespace Xpto.Repositories.Shared.Entities
                 cm.ExecuteNonQuery();
 
                 phone.Code = (int)code.Value;
-
             }
 
             return phones;
@@ -136,7 +135,7 @@ namespace Xpto.Repositories.Shared.Entities
         {
             var commandText = new StringBuilder()
             .AppendLine(" DELETE FROM [tb_customer_phone]")
-            .AppendLine(" WHERE [customer_code] = " + code);
+            .AppendLine(" WHERE [customer_code] = @customer_code");
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -183,7 +182,7 @@ namespace Xpto.Repositories.Shared.Entities
         public Phone Get(int code)
         {
             var commandText = this.GetSelectQuery()
-                   .AppendLine(" WHERE [customer_code] = " + code);
+                   .AppendLine(" WHERE [code] = @code" );
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -191,7 +190,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             cm.CommandText = commandText.ToString();
 
-            cm.Parameters.Add(new SqlParameter("@customer_code", code));
+            cm.Parameters.Add(new SqlParameter("@code", code));
 
             var dataReader = cm.ExecuteReader();
 
@@ -291,9 +290,9 @@ namespace Xpto.Repositories.Shared.Entities
             phone.Id = dataReader.GetGuid("id");
             phone.CustomerCode = dataReader.GetInt32("customer_code");
             phone.Type = dataReader.GetString("type");
-            phone.Type = dataReader.GetString("ddd");
-            phone.Ddd = dataReader.GetInt32("number");
-            phone.Number = dataReader.GetInt64("note");
+            phone.Ddd = dataReader.GetInt32("ddd");
+            phone.Number = dataReader.GetInt64("number");
+            phone.Note = dataReader.GetString("note");
    
 
             return phone;

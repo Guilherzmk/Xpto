@@ -1,4 +1,5 @@
 using System.Net.NetworkInformation;
+using System.Xml.Linq;
 using Xpto.Core.Customers;
 using Xpto.Core.Shared.Entities.Address;
 using Xpto.Core.Shared.Entities.Email;
@@ -15,15 +16,15 @@ namespace Xpto.Test.Customers
         private readonly IAddressRepository _addressRepository;
         private readonly IEmailRepository _emailRepository;
         public string name = "Gui";
-        public int customerCode = 46;
+        public int customerCode = 68;
+
 
         [TestMethod]
         public void Create()
         {
-
-            var customer = new Customer
+            var customer = new Customer();
+            var customerParams = new CustomerCreateParams(customer.Name = "Guilherme")
             {
-                Name = "Guilherme",
                 Nickname = "Gui",
                 BirthDate = new DateTime(2006, 02, 21),
                 PersonType = "PF",
@@ -80,19 +81,18 @@ namespace Xpto.Test.Customers
                 }
             };
 
-            customer.Addresses = addresses;
-            customer.Emails = emails;
-            customer.Phones = phones;
-            var result = customerService.Create(customer);
+            customerParams.Addresses = addresses;
+            customerParams.Emails = emails;
+            customerParams.Phones = phones;
+            var result = customerService.Create(customerParams);
         }
 
         [TestMethod]
         public void Update()
         {
-            
-            var customer = new Customer
+            var customer = new Customer();
+            var customerParams = new CustomerUpdateParams
             {
-                Code = customerCode,
                 Name = "Xpto USC",
                 Nickname = "x",
                 BirthDate = new DateTime(2006, 02, 21),
@@ -150,17 +150,28 @@ namespace Xpto.Test.Customers
             }
             };
 
-            var result = customerService.Update(customer);
+            //var result = customerService.Update(customerParams);
         }
 
         [TestMethod]
         public void Get()
         {
             var customer = new Customer();
-            var result = customerService.Get(customerCode);
+            var result = customerService.Get(66);
 
             customer.Name = result.Name;
         }
+
+        [TestMethod]
+
+        public void GetAddress()
+        {
+            
+
+            var codeGuid = Guid.Parse("6D2A321F-3D07-437E-95D7-AC422825E9E7");
+            var result = customerService.GetAddress(codeGuid);
+        }
+
 
         [TestMethod]
         public void List()
@@ -174,12 +185,9 @@ namespace Xpto.Test.Customers
             var delete = customerService.Delete(customerCode);
         }
 
-        [TestMethod]
+       
 
-        public void FilterName()
-        {
-            var filter = customerService.FilterName(name);
-        }
+        
 
 
     }

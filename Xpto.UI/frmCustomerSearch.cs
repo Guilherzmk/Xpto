@@ -13,14 +13,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Xpto.Core.Customers;
 using System.Runtime.Versioning;
 using static Xpto.UI.Customers.frmCustomerRegister;
+using Xpto.Core.Shared.Entities.Address;
 
 namespace Xpto.UI.Customers
 {
     public partial class frmCustomerSearch : Form
     {
         private readonly ICustomerService _customerService;
-        public event CustomerChangeDelegate Change;
-        Customer customer = new Customer();
+
 
         public frmCustomerSearch(ICustomerService customerService)
         {
@@ -37,7 +37,14 @@ namespace Xpto.UI.Customers
         {
             var dt = this._customerService.LoadDataTable();
             this.dvgSearch.DataSource = dt;
-            this.dvgSearch.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dvgSearch.Columns["id"].Visible = false;
+            this.dvgSearch.Columns["creation_date"].Visible = false;
+            this.dvgSearch.Columns["creation_user_id"].Visible = false;
+            this.dvgSearch.Columns["creation_user_name"].Visible = false;
+            this.dvgSearch.Columns["change_date"].Visible = false;
+            this.dvgSearch.Columns["change_user_id"].Visible = false;
+            this.dvgSearch.Columns["change_user_name"].Visible = false;
+
 
             for (int i = 0; i < this.dvgSearch.Columns.Count; i++)
             {
@@ -57,31 +64,32 @@ namespace Xpto.UI.Customers
 
         private void dvgSearch_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            var code = int.Parse(this.dvgSearch.SelectedRows[0].Cells[1].Value?.ToString());
+            try
+            {
+                var code = int.Parse(this.dvgSearch.SelectedRows[0].Cells[1].Value?.ToString());
 
-            var customer = this._customerService.Get(code);
-            if (customer == null)
-                return;
+                var customer = this._customerService.Get(code);
+                if (customer == null)
+                    return;
 
+                var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
+                frm.LoadCustomer(customer);
+                //frm.Change += CustomerChanged;
 
-            var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
-            frm.LoadCustomer(customer);
-            frm.Change += CustomerChanged;
+                frm.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
 
-            frm.Show(this);
+                Console.WriteLine(ex.Message);
+            }
+
         }
 
         private void cadastrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
             frm.Show(this);
-        }
-
-
-
-        private void btnFilter_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnFind_Click(object sender, EventArgs e)
@@ -99,7 +107,7 @@ namespace Xpto.UI.Customers
 
             var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
             frm.LoadCustomer(customer);
-            frm.Change += CustomerChanged;
+
 
             frm.Show(this);
         }
@@ -117,6 +125,23 @@ namespace Xpto.UI.Customers
                 {
                     (dvgSearch.DataSource as DataTable).DefaultView.RowFilter =
                         String.Format("name like '%" + txtName.Text + "%'");
+                }
+            }
+        }
+
+        private void txtIdentity_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (string.IsNullOrEmpty(txtIdentity.Text))
+                {
+                    var msgText = "Insira algo para filtrar";
+                    MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    (dvgSearch.DataSource as DataTable).DefaultView.RowFilter =
+                        string.Format("identity like '%" + txtIdentity.Text + "%'");
                 }
             }
         }

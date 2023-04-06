@@ -87,11 +87,11 @@
             dvgSearch.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dvgSearch.BackgroundColor = Color.FromArgb(17, 17, 17);
             dvgSearch.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dvgSearch.Location = new Point(12, 20);
+            dvgSearch.Location = new Point(384, 20);
             dvgSearch.Name = "dvgSearch";
             dvgSearch.RowTemplate.Height = 25;
             dvgSearch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dvgSearch.Size = new Size(1385, 632);
+            dvgSearch.Size = new Size(746, 632);
             dvgSearch.TabIndex = 9;
             dvgSearch.CellDoubleClick += dvgSearch_CellDoubleClick;
             // 
@@ -108,14 +108,14 @@
             // cadastrarToolStripMenuItem
             // 
             cadastrarToolStripMenuItem.Name = "cadastrarToolStripMenuItem";
-            cadastrarToolStripMenuItem.Size = new Size(180, 24);
+            cadastrarToolStripMenuItem.Size = new Size(132, 24);
             cadastrarToolStripMenuItem.Text = "Cadastrar";
             cadastrarToolStripMenuItem.Click += cadastrarToolStripMenuItem_Click;
             // 
             // editarToolStripMenuItem
             // 
             editarToolStripMenuItem.Name = "editarToolStripMenuItem";
-            editarToolStripMenuItem.Size = new Size(180, 24);
+            editarToolStripMenuItem.Size = new Size(132, 24);
             editarToolStripMenuItem.Text = "Editar";
             editarToolStripMenuItem.Click += editarToolStripMenuItem_Click;
             // 
@@ -175,6 +175,7 @@
             txtIdentity.Name = "txtIdentity";
             txtIdentity.Size = new Size(169, 22);
             txtIdentity.TabIndex = 13;
+            txtIdentity.KeyDown += txtIdentity_KeyDown;
             // 
             // frmCustomerSearch
             // 

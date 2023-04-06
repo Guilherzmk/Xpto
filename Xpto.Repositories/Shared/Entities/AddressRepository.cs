@@ -212,7 +212,7 @@ namespace Xpto.Repositories.Shared.Entities
         public Address Get(int code)
         {
             var commandText = this.GetSelectQuery()
-                   .AppendLine(" WHERE [customer_code] = @code");
+                   .AppendLine(" WHERE [code] = @code");
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -291,6 +291,7 @@ namespace Xpto.Repositories.Shared.Entities
             var sb = new StringBuilder()
                 .AppendLine(" SELECT")
                 .AppendLine(" A.[id],")
+                .AppendLine(" A.[code],")
                 .AppendLine(" A.[customer_code],")
                 .AppendLine(" A.[street],")
                 .AppendLine(" A.[number],")
@@ -315,6 +316,7 @@ namespace Xpto.Repositories.Shared.Entities
             var sb = new StringBuilder()
                 .AppendLine(" SELECT")
                 .AppendLine(" A.[id],")
+                .AppendLine(" A.[code],")
                 .AppendLine(" A.[customer_code],")
                 .AppendLine(" A.[street],")
                 .AppendLine(" A.[number],")
@@ -346,7 +348,7 @@ namespace Xpto.Repositories.Shared.Entities
             cm.Parameters.Add(new SqlParameter("@note", address.Note.GetDbValue()));
         }
 
-        private static Address LoadDataReader(SqlDataReader dataReader)
+        public static Address LoadDataReader(SqlDataReader dataReader)
         {
             var address = new Address();
 
@@ -401,8 +403,6 @@ namespace Xpto.Repositories.Shared.Entities
             da.Dispose();
 
             return dataTable;
-
-
         }
 
 

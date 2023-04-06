@@ -50,12 +50,14 @@
             txtType = new TextBox();
             lblType = new Label();
             lblAddressRegister = new Label();
+            btnDelete = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(btnDelete);
             panel1.Controls.Add(btnClose);
             panel1.Controls.Add(btnRegister);
             panel1.Controls.Add(txtNote);
@@ -88,7 +90,7 @@
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             btnClose.ForeColor = SystemColors.Control;
-            btnClose.Location = new Point(486, 321);
+            btnClose.Location = new Point(330, 321);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(150, 51);
             btnClose.TabIndex = 21;
@@ -312,6 +314,21 @@
             lblAddressRegister.TabIndex = 1;
             lblAddressRegister.Text = "Endereço";
             // 
+            // btnDelete
+            // 
+            btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnDelete.BackColor = Color.FromArgb(51, 51, 51);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            btnDelete.ForeColor = SystemColors.Control;
+            btnDelete.Location = new Point(486, 321);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(150, 51);
+            btnDelete.TabIndex = 22;
+            btnDelete.Text = "Deletar";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
+            // 
             // frmAddressRegister
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -354,5 +371,6 @@
         private Label lblZipCode;
         private Button btnClose;
         private Button btnRegister;
+        private Button btnDelete;
     }
 }

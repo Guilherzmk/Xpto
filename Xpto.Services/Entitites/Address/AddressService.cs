@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -60,6 +61,12 @@ namespace Xpto.Services.Entitites
         {
             var list = _repository.Find(customerCode);
             return list;
+        }
+
+        public DataTable LoadDataTable()
+        {
+            var dt = _repository.LoadDataTable();
+            return dt;
         }
 
 

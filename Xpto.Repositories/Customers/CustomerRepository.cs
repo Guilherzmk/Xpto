@@ -98,6 +98,7 @@ namespace Xpto.Repositories.Customers
 
             return customer;
         }
+
         public Customer Update(Customer customer)
         {
 
@@ -131,8 +132,6 @@ namespace Xpto.Repositories.Customers
 
             cm.ExecuteNonQuery();
 
-            //customer.Code = (int)customer.Code.Value;
-
             customer.Addresses.Select(x => x.CustomerCode = customer.Code).ToList();
             _addressRepository.Delete(customer.Code);
             customer.Addresses = _addressRepository.InsertMany(customer.Addresses);
@@ -142,12 +141,13 @@ namespace Xpto.Repositories.Customers
             customer.Emails = _emailRepository.InsertMany(customer.Emails);
 
             customer.Phones.Select(x => x.CustomerCode = customer.Code).ToList();
-            _emailRepository.Delete(customer.Code);
+            _phoneRepository.Delete(customer.Code);
             customer.Phones = _phoneRepository.InsertMany(customer.Phones);
 
 
             return customer;
         }
+
         public int Delete(int code)
         {
             var commandText = new StringBuilder()
@@ -168,6 +168,7 @@ namespace Xpto.Repositories.Customers
 
             return result;
         }
+
         public Customer Get(Guid id)
         {
             var commandText = this.GetSelectQuery()
@@ -195,6 +196,7 @@ namespace Xpto.Repositories.Customers
             return customer;
 
         }
+
         public Customer Get(int code)
         {
             var commandText = this.GetSelectQuery()
@@ -224,8 +226,36 @@ namespace Xpto.Repositories.Customers
             connection.Close();
 
             return customer;
+        }
+
+        public Address GetAddress(Guid id)
+        {
+            var commandText = this.GetAddressQuery();
+            commandText.AppendLine(" WHERE [id] = @id");
+
+            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
+            connection.Open();
+            var cm = connection.CreateCommand();
+
+            cm.CommandText = commandText.ToString();
+
+            cm.Parameters.Add(new SqlParameter("@id", id));
+
+            var dataReader = cm.ExecuteReader();
+
+            Address address = null;
+
+            while (dataReader.Read())
+            {
+                address = LoadAddressDataReader(dataReader);
+            }
+
+            connection.Close();
+
+            return address;
 
         }
+
         public IList<Customer> Find()
         {
             var l = new List<Customer>();
@@ -283,10 +313,11 @@ namespace Xpto.Repositories.Customers
             var commandTextCustomer = new StringBuilder()
                 .AppendLine(" SELECT")
                 .AppendLine(" A.[id],")
-                .AppendLine(" A.[code],")
+                .AppendLine(" A.[code] AS Código,")
                 .AppendLine(" A.[name],")
                 .AppendLine(" A.[nickname],")
                 .AppendLine(" A.[birth_date],")
+                .AppendLine(" A.[identity],")
                 .AppendLine(" A.[person_type],")
                 .AppendLine(" A.[note],")
                 .AppendLine(" A.[creation_date],")
@@ -314,6 +345,7 @@ namespace Xpto.Repositories.Customers
 
             return dataTable;
         }
+
         private static Customer LoadDataReader(SqlDataReader dataReader)
         {
             var customer = new Customer();
@@ -334,6 +366,27 @@ namespace Xpto.Repositories.Customers
 
             return customer;
         }
+
+        private static Address LoadAddressDataReader(SqlDataReader dataReader)
+        {
+            var address = new Address();
+
+            address.Id = dataReader.GetGuid("id");
+            //address.Code = dataReader.GetInt32("code");
+            address.CustomerCode = dataReader.GetInt32("customer_code");
+            address.Type = dataReader.GetString("type");
+            address.Street = dataReader.GetString("street");
+            address.Number = dataReader.GetString("number");
+            address.Complement = dataReader.GetString("complement");
+            address.District = dataReader.GetString("district");
+            address.City = dataReader.GetString("city");
+            address.State = dataReader.GetString("state");
+            address.ZipCode = dataReader.GetString("zip_code");
+            address.Note = dataReader.GetString("note");
+
+            return address;
+        }
+        
         public long Count()
         {
             var commandText = new StringBuilder()
@@ -374,6 +427,25 @@ namespace Xpto.Repositories.Customers
                 .AppendLine(" FROM [tb_customer] AS A");
             return sb;
         }
+
+        public StringBuilder GetAddressQuery()
+        {
+            var sb = new StringBuilder()
+                .AppendLine(" SELECT")
+                .AppendLine(" A.[id],")
+                .AppendLine(" A.[customer_code],")
+                .AppendLine(" A.[street],")
+                .AppendLine(" A.[number],")
+                .AppendLine(" A.[complement],")
+                .AppendLine(" A.[district],")
+                .AppendLine(" A.[city],")
+                .AppendLine(" A.[state],")
+                .AppendLine(" A.[zip_code],")
+                .AppendLine(" A.[note]")
+                .AppendLine(" FROM [tb_customer_address] AS A");
+            return sb;
+        }
+
         private void SetParameters(Customer customer, SqlCommand cm)
         {
             cm.Parameters.Add(new SqlParameter("@id", customer.Id.GetDbValue()));

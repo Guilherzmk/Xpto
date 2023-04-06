@@ -18,5 +18,6 @@ namespace Xpto.Core.Shared.Entities.Address
         IList<Address> Find();
         IList<Address> Find(int customerCode);
         DataTable LoadDataTable();
+
     }
 }

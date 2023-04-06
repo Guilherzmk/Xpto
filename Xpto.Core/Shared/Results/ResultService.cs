@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Xpto.Core.Shared.Results
 {
-    public class ResultService
+    public class ResultService : IResultService
     {
         public IList<string> Messages { get; set; }
 

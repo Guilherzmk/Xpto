@@ -12,6 +12,7 @@ public interface ICustomerRepository
     int Delete(int code);
     Customer Get(Guid id);
     Customer Get(int code);
+    Address GetAddress(Guid id);
     IList<Customer> Find();
     DataTable LoadDataTable();
     long Count();

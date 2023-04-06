@@ -30,6 +30,7 @@
         {
             lblRegister = new Label();
             pnlRegister = new Panel();
+            btnDelete = new Button();
             dgvAddress = new DataGridView();
             btnAddEmail = new Button();
             btnAddPhone = new Button();
@@ -54,7 +55,6 @@
             txtName = new TextBox();
             lblName = new Label();
             lblCode = new Label();
-            btnDelete = new Button();
             pnlRegister.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAddress).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvEmail).BeginInit();
@@ -107,6 +107,21 @@
             pnlRegister.Size = new Size(3679, 804);
             pnlRegister.TabIndex = 1;
             // 
+            // btnDelete
+            // 
+            btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnDelete.BackColor = Color.FromArgb(51, 51, 51);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            btnDelete.ForeColor = SystemColors.Control;
+            btnDelete.Location = new Point(1255, 560);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(150, 51);
+            btnDelete.TabIndex = 27;
+            btnDelete.Text = "Deletar";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
+            // 
             // dgvAddress
             // 
             dgvAddress.BackgroundColor = Color.FromArgb(17, 17, 17);
@@ -114,8 +129,10 @@
             dgvAddress.Location = new Point(920, 47);
             dgvAddress.Name = "dgvAddress";
             dgvAddress.RowTemplate.Height = 25;
+            dgvAddress.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAddress.Size = new Size(641, 137);
             dgvAddress.TabIndex = 26;
+            dgvAddress.CellDoubleClick += dgvAddress_CellDoubleClick;
             // 
             // btnAddEmail
             // 
@@ -160,8 +177,10 @@
             dgvEmail.Location = new Point(920, 400);
             dgvEmail.Name = "dgvEmail";
             dgvEmail.RowTemplate.Height = 25;
+            dgvEmail.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvEmail.Size = new Size(641, 137);
             dgvEmail.TabIndex = 22;
+            dgvEmail.CellDoubleClick += dgvEmail_CellDoubleClick;
             // 
             // lblEmail
             // 
@@ -181,8 +200,10 @@
             dgvPhone.Location = new Point(920, 224);
             dgvPhone.Name = "dgvPhone";
             dgvPhone.RowTemplate.Height = 25;
+            dgvPhone.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvPhone.Size = new Size(641, 137);
             dgvPhone.TabIndex = 20;
+            dgvPhone.CellDoubleClick += dgvPhone_CellDoubleClick;
             // 
             // label2
             // 
@@ -371,21 +392,6 @@
             lblCode.Size = new Size(70, 29);
             lblCode.TabIndex = 26;
             lblCode.Text = "Código:";
-            // 
-            // btnDelete
-            // 
-            btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnDelete.BackColor = Color.FromArgb(51, 51, 51);
-            btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            btnDelete.ForeColor = SystemColors.Control;
-            btnDelete.Location = new Point(1255, 560);
-            btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(150, 51);
-            btnDelete.TabIndex = 27;
-            btnDelete.Text = "Deletar";
-            btnDelete.UseVisualStyleBackColor = false;
-            btnDelete.Click += btnDelete_Click;
             // 
             // frmCustomerRegister
             // 
