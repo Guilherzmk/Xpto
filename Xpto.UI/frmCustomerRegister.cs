@@ -6,12 +6,12 @@ using Xpto.Core.Shared.Entities.Email;
 using Xpto.Core.Shared.Entities.Phone;
 using Xpto.Services.Customers;
 using Xpto.UI.Shared.Entities;
+using Xpto.Core.Shared.Types;
 
 namespace Xpto.UI.Customers
 {
     public partial class frmCustomerRegister : Form
     {
-
 
         private readonly ICustomerService _customerService;
 
@@ -30,9 +30,19 @@ namespace Xpto.UI.Customers
 
         }
 
-        private void btnExit_Click(object sender, EventArgs e)
+        public void LoadCustomer(Customer customer)
         {
-            this.Close();
+            this.Customer = customer;
+            this.txtName.Text = customer.Name;
+            this.txtNickname.Text = customer.Nickname;
+            this.txtIdentity.Text = customer.Identity;
+            this.txtNote.Text = customer.Note;
+            this.dtpBirthDate.Text = customer.BirthDate?.ToString("dd/MM/yyyy");
+            this.cboPersonType.Text = customer.PersonType;
+            this.lblCode.Text = $"Código: {customer.Code}";
+            LoadAddresses();
+            LoadEmails();
+            LoadPhones();
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
@@ -140,32 +150,6 @@ namespace Xpto.UI.Customers
             this.LoadAddresses();
         }
 
-        private void btnAddPhone_Click(object sender, EventArgs e)
-        {
-            var frm = new frmPhoneRegister();
-            frm.ShowDialog(this);
-
-            if (frm.Phone != null)
-                this.Customer.Phones.Add(frm.Phone);
-
-            this.LoadPhones();
-        }
-
-        private void btnAddEmail_Click(object sender, EventArgs e)
-        {
-            var frm = new frmEmailRegister();
-            frm.ShowDialog(this);
-
-            if (frm.Email != null)
-                this.Customer.Emails.Add(frm.Email);
-            this.LoadEmails();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         public void LoadAddresses()
         {
             var dt = new DataTable();
@@ -202,30 +186,75 @@ namespace Xpto.UI.Customers
 
         }
 
-        public void LoadEmails()
+        private void dgvAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            var dt = new DataTable();
-            dt.Columns.Add("Id");
-            dt.Columns.Add("Código");
-            dt.Columns.Add("Código do Cliente");
-            dt.Columns.Add("Tipo");
-            dt.Columns.Add("Endereço de Email");
-            dt.Columns.Add("Anotação");
-
-            foreach (var item in this.Customer.Emails)
+            try
             {
-                var row = dt.Rows.Add(item.Id);
-                row[1] = item.Code;
-                row[2] = item.CustomerCode;
-                row[3] = item.Type;
-                row[4] = item.Address;
-                row[5] = item.Note;
-            }
+                var id = Guid.Parse(this.dgvAddress.SelectedRows[0].Cells[0].Value?.ToString());
 
-            this.dgvEmail.DataSource = dt;
-            this.dgvEmail.Columns["Id"].Visible = false;
-            this.dgvEmail.Columns["Código"].Visible = false;
-            this.dgvEmail.Columns["Código do Cliente"].Visible = false;
+                Address address = null;
+                foreach (var item in Customer.Addresses)
+                {
+                    if (item.Id == id)
+                    {
+                        address = item;
+                        break;
+                    }
+                }
+
+                if (address == null)
+                    return;
+
+                var frm = new frmAddressRegister();
+                frm.LoadAddress(address);
+                frm.ShowDialog(this);
+
+                if (frm.Action == ActionType.Create)
+                {
+                    if (frm.Address != null)
+                        for (int i = 0; i <= Customer.Addresses.Count - 1; i++)
+                        {
+                            var item = Customer.Addresses[i];
+
+                            if (item.Id == id)
+                            {
+                                Customer.Addresses[i] = frm.Address;
+                                break;
+                            }
+                        }
+                    LoadAddresses();
+                }
+                else if (frm.Action == ActionType.Delete)
+                {
+                    if (frm.Address != null)
+                        for (int i = 0; i <= Customer.Addresses.Count - 1; i++)
+                        {
+                            var item = Customer.Addresses[i];
+
+                            if (item.Id == id)
+                            {
+                                Customer.Addresses.Remove(item);
+                                break;
+                            }
+                        }
+                    LoadAddresses();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnAddPhone_Click(object sender, EventArgs e)
+        {
+            var frm = new frmPhoneRegister();
+            frm.ShowDialog(this);
+
+            if (frm.Phone != null)
+                this.Customer.Phones.Add(frm.Phone);
+
+            this.LoadPhones();
         }
 
         public void LoadPhones()
@@ -257,19 +286,160 @@ namespace Xpto.UI.Customers
 
         }
 
-        public void LoadCustomer(Customer customer)
+        private void dgvPhone_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            this.Customer = customer;
-            this.txtName.Text = customer.Name;
-            this.txtNickname.Text = customer.Nickname;
-            this.txtIdentity.Text = customer.Identity;
-            this.txtNote.Text = customer.Note;
-            this.dtpBirthDate.Text = customer.BirthDate?.ToString("dd/MM/yyyy");
-            this.cboPersonType.Text = customer.PersonType;
-            this.lblCode.Text = $"Código: {customer.Code}";
-            LoadAddresses();
-            LoadEmails();
-            LoadPhones();
+            try
+            {
+                var id = Guid.Parse(this.dgvPhone.SelectedRows[0].Cells[0].Value?.ToString());
+
+                Phone phone = null;
+                foreach (var item in Customer.Phones)
+                {
+                    if (item.Id == id)
+                    {
+                        phone = item;
+                        break;
+                    }
+                }
+
+                if (phone == null)
+                    return;
+
+                var frm = new frmPhoneRegister();
+                frm.LoadPhone(phone);
+                frm.ShowDialog(this);
+
+
+                if (frm.Action == ActionType.Create)
+                {
+                    for (int i = 0; i <= Customer.Phones.Count - 1; i++)
+                    {
+                        var item = Customer.Phones[i];
+
+                        if (item.Id == id)
+                        {
+                            Customer.Phones[i] = frm.Phone;
+                            break;
+                        }
+                    }
+                }
+                else if (frm.Action == ActionType.Delete)
+                {
+                    for (int i = 0; i <= Customer.Phones.Count - 1; i++)
+                    {
+                        var item = Customer.Phones[i];
+
+                        if (item.Id == id)
+                        {
+                            Customer.Phones.Remove(item);
+                            break;
+                        }
+                    }
+                }
+
+
+                LoadPhones();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void btnAddEmail_Click(object sender, EventArgs e)
+        {
+            var frm = new frmEmailRegister();
+            frm.ShowDialog(this);
+
+            if (frm.Email != null)
+                this.Customer.Emails.Add(frm.Email);
+            this.LoadEmails();
+        }
+
+        public void LoadEmails()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Código");
+            dt.Columns.Add("Código do Cliente");
+            dt.Columns.Add("Tipo");
+            dt.Columns.Add("Endereço de Email");
+            dt.Columns.Add("Anotação");
+
+            foreach (var item in this.Customer.Emails)
+            {
+                var row = dt.Rows.Add(item.Id);
+                row[1] = item.Code;
+                row[2] = item.CustomerCode;
+                row[3] = item.Type;
+                row[4] = item.Address;
+                row[5] = item.Note;
+            }
+
+            this.dgvEmail.DataSource = dt;
+            this.dgvEmail.Columns["Id"].Visible = false;
+            this.dgvEmail.Columns["Código"].Visible = false;
+            this.dgvEmail.Columns["Código do Cliente"].Visible = false;
+        }
+
+        private void dgvEmail_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                var id = Guid.Parse(this.dgvEmail.SelectedRows[0].Cells[0].Value?.ToString());
+
+                Email email = null;
+                foreach (var item in Customer.Emails)
+                {
+                    if (item.Id == id)
+                    {
+                        email = item;
+                        break;
+                    }
+                }
+
+                if (email == null)
+                    return;
+
+                var frm = new frmEmailRegister();
+                frm.LoadEmail(email);
+                frm.ShowDialog(this);
+
+                if (frm.Action == ActionType.Create)
+                {
+                    for (int i = 0; i <= Customer.Emails.Count - 1; i++)
+                    {
+                        var item = Customer.Emails[i];
+
+                        if (item.Id == id)
+                        {
+                            Customer.Emails[i] = frm.Email;
+                            break;
+                        }
+                    }
+                }
+                else if (frm.Action == ActionType.Delete)
+                {
+                    for (int i = 0; i <= Customer.Emails.Count - 1; i++)
+                    {
+                        var item = Customer.Emails[i];
+
+                        if (item.Id == id)
+                        {
+                            Customer.Emails.Remove(item);
+                            break;
+                        }
+                    }
+                }
+                LoadEmails();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -291,113 +461,11 @@ namespace Xpto.UI.Customers
             }
         }
 
-        private void dgvAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
-            var id = Guid.Parse(this.dgvAddress.SelectedRows[0].Cells[0].Value?.ToString());
-
-            Address address = null;
-            foreach (var item in Customer.Addresses)
-            {
-                if (item.Id == id)
-                {
-                    address = item;
-                    break;
-                }
-            }
-
-            if (address == null)
-                return;
-
-            var frm = new frmAddressRegister();
-            frm.LoadAddress(address);
-            frm.ShowDialog(this);
-
-            if (frm.Address != null)
-                for (int i = 0; i <= Customer.Addresses.Count - 1; i++)
-                {
-                    var item = Customer.Addresses[i];
-
-                    if (item.Id == id)
-                    {
-                        Customer.Addresses[i] = frm.Address;
-                        break;
-                    }
-                }
-            LoadAddresses();
+            this.Close();
         }
 
-        private void dgvPhone_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var id = Guid.Parse(this.dgvPhone.SelectedRows[0].Cells[0].Value?.ToString());
-
-            Phone phone = null;
-            foreach (var item in Customer.Phones)
-            {
-                if (item.Id == id)
-                {
-                    phone = item;
-                    break;
-                }
-            }
-
-            if (phone == null)
-                return;
-
-            var frm = new frmPhoneRegister();
-            frm.LoadPhone(phone);
-            frm.ShowDialog(this);
-
-
-            if (frm.Phone != null)
-                for (int i = 0; i <= Customer.Phones.Count - 1; i++)
-                {
-                    var item = Customer.Phones[i];
-
-                    if (item.Id == id)
-                    {
-                        Customer.Phones[i] = frm.Phone;
-                        break;
-                    }
-                }
-
-            LoadPhones();
-        }
-
-        private void dgvEmail_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var id = Guid.Parse(this.dgvEmail.SelectedRows[0].Cells[0].Value?.ToString());
-
-            Email email = null;
-            foreach (var item in Customer.Emails)
-            {
-                if (item.Id == id)
-                {
-                    email = item;
-                    break;
-                }
-            }
-
-            if (email == null)
-                return;
-
-            var frm = new frmEmailRegister();
-            frm.LoadEmail(email);
-            frm.ShowDialog(this);
-
-            if (frm.Email != null)
-            {
-                for (int i = 0; i <= Customer.Emails.Count - 1; i++)
-                {
-                    var item = Customer.Emails[i];
-
-                    if (item.Id == id)
-                    {
-                        Customer.Emails[i] = frm.Email;
-                        break;
-                    }
-                }
-            }
-            LoadEmails();
-        }
+       
     }
 }

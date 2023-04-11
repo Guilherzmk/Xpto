@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmApp));
             panel1 = new Panel();
             btnCustomerRegister = new Button();
             btnCustomerSearch = new Button();
@@ -96,6 +97,7 @@
             Controls.Add(lblXpto);
             Controls.Add(panel1);
             Font = new Font("Constantia", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmApp";
             Text = "Xpto";
             WindowState = FormWindowState.Maximized;

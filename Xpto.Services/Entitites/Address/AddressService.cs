@@ -14,6 +14,7 @@ namespace Xpto.Services.Entitites
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository _repository;
+
         public AddressService(IAddressRepository repository)
         {
             _repository = repository;
@@ -51,7 +52,7 @@ namespace Xpto.Services.Entitites
             return address;
         }
 
-    public IList<Address> List()
+        public IList<Address> List()
         {
             var list = _repository.Find();
             return list;

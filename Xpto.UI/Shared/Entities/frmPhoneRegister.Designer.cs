@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPhoneRegister));
             panel1 = new Panel();
+            btnDelete = new Button();
             btnClose = new Button();
             btnRegister = new Button();
             txtNote = new TextBox();
@@ -46,6 +48,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(btnDelete);
             panel1.Controls.Add(btnClose);
             panel1.Controls.Add(btnRegister);
             panel1.Controls.Add(txtNote);
@@ -61,6 +64,21 @@
             panel1.Size = new Size(805, 382);
             panel1.TabIndex = 0;
             // 
+            // btnDelete
+            // 
+            btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnDelete.BackColor = Color.FromArgb(51, 51, 51);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            btnDelete.ForeColor = SystemColors.Control;
+            btnDelete.Location = new Point(485, 317);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(150, 51);
+            btnDelete.TabIndex = 24;
+            btnDelete.Text = "Deletar";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
+            // 
             // btnClose
             // 
             btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -68,7 +86,7 @@
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             btnClose.ForeColor = SystemColors.Control;
-            btnClose.Location = new Point(485, 317);
+            btnClose.Location = new Point(329, 317);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(150, 51);
             btnClose.TabIndex = 23;
@@ -194,7 +212,9 @@
             ClientSize = new Size(800, 450);
             Controls.Add(lblPhoneRegister);
             Controls.Add(panel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmPhoneRegister";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "frmPhoneRegister";
             Load += frmPhoneRegister_Load;
             panel1.ResumeLayout(false);
@@ -217,5 +237,6 @@
         private TextBox txtNote;
         private Button btnRegister;
         private Button btnClose;
+        private Button btnDelete;
     }
 }

@@ -404,10 +404,5 @@ namespace Xpto.Repositories.Shared.Entities
 
             return dataTable;
         }
-
-
-
-
-
     }
 }

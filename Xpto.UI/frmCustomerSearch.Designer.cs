@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerSearch));
             lblName = new Label();
             txtName = new TextBox();
             btnExit = new Button();
@@ -50,7 +51,7 @@
             lblName.AutoSize = true;
             lblName.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblName.ForeColor = SystemColors.Control;
-            lblName.Location = new Point(12, 36);
+            lblName.Location = new Point(42, 54);
             lblName.Name = "lblName";
             lblName.Size = new Size(61, 29);
             lblName.TabIndex = 3;
@@ -61,7 +62,7 @@
             txtName.BackColor = Color.FromArgb(17, 17, 17);
             txtName.BorderStyle = BorderStyle.FixedSingle;
             txtName.ForeColor = SystemColors.Window;
-            txtName.Location = new Point(79, 43);
+            txtName.Location = new Point(109, 61);
             txtName.Name = "txtName";
             txtName.Size = new Size(169, 22);
             txtName.TabIndex = 4;
@@ -70,10 +71,11 @@
             // btnExit
             // 
             btnExit.BackColor = Color.FromArgb(51, 51, 51);
+            btnExit.Cursor = Cursors.Hand;
             btnExit.FlatStyle = FlatStyle.Flat;
             btnExit.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             btnExit.ForeColor = SystemColors.Control;
-            btnExit.Location = new Point(1213, 658);
+            btnExit.Location = new Point(1015, 704);
             btnExit.Margin = new Padding(4, 3, 4, 3);
             btnExit.Name = "btnExit";
             btnExit.Size = new Size(184, 52);
@@ -85,13 +87,13 @@
             // dvgSearch
             // 
             dvgSearch.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dvgSearch.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dvgSearch.BackgroundColor = Color.FromArgb(17, 17, 17);
-            dvgSearch.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dvgSearch.Location = new Point(384, 20);
+            dvgSearch.Location = new Point(13, 12);
             dvgSearch.Name = "dvgSearch";
             dvgSearch.RowTemplate.Height = 25;
             dvgSearch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dvgSearch.Size = new Size(746, 632);
+            dvgSearch.Size = new Size(1186, 686);
             dvgSearch.TabIndex = 9;
             dvgSearch.CellDoubleClick += dvgSearch_CellDoubleClick;
             // 
@@ -125,7 +127,7 @@
             mstCustomer.Items.AddRange(new ToolStripItem[] { clienteToolStripMenuItem });
             mstCustomer.Location = new Point(0, 0);
             mstCustomer.Name = "mstCustomer";
-            mstCustomer.Size = new Size(1409, 27);
+            mstCustomer.Size = new Size(1538, 27);
             mstCustomer.TabIndex = 10;
             mstCustomer.Text = "menuStrip1";
             // 
@@ -135,9 +137,9 @@
             panel1.Controls.Add(btnFind);
             panel1.Controls.Add(dvgSearch);
             panel1.Controls.Add(btnExit);
-            panel1.Location = new Point(0, 84);
+            panel1.Location = new Point(300, 30);
             panel1.Name = "panel1";
-            panel1.Size = new Size(2113, 853);
+            panel1.Size = new Size(1813, 907);
             panel1.TabIndex = 11;
             // 
             // btnFind
@@ -146,7 +148,7 @@
             btnFind.FlatStyle = FlatStyle.Flat;
             btnFind.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             btnFind.ForeColor = SystemColors.Control;
-            btnFind.Location = new Point(1021, 658);
+            btnFind.Location = new Point(823, 704);
             btnFind.Margin = new Padding(4, 3, 4, 3);
             btnFind.Name = "btnFind";
             btnFind.Size = new Size(184, 52);
@@ -160,7 +162,7 @@
             lblIdentity.AutoSize = true;
             lblIdentity.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblIdentity.ForeColor = SystemColors.Control;
-            lblIdentity.Location = new Point(266, 36);
+            lblIdentity.Location = new Point(12, 98);
             lblIdentity.Name = "lblIdentity";
             lblIdentity.Size = new Size(91, 29);
             lblIdentity.TabIndex = 12;
@@ -171,7 +173,7 @@
             txtIdentity.BackColor = Color.FromArgb(17, 17, 17);
             txtIdentity.BorderStyle = BorderStyle.FixedSingle;
             txtIdentity.ForeColor = SystemColors.Window;
-            txtIdentity.Location = new Point(363, 43);
+            txtIdentity.Location = new Point(109, 105);
             txtIdentity.Name = "txtIdentity";
             txtIdentity.Size = new Size(169, 22);
             txtIdentity.TabIndex = 13;
@@ -182,7 +184,7 @@
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(51, 51, 51);
-            ClientSize = new Size(1409, 881);
+            ClientSize = new Size(1538, 881);
             Controls.Add(txtIdentity);
             Controls.Add(lblIdentity);
             Controls.Add(panel1);
@@ -190,6 +192,7 @@
             Controls.Add(lblName);
             Controls.Add(mstCustomer);
             Font = new Font("Constantia", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = mstCustomer;
             Name = "frmCustomerSearch";
             Text = "Pesquisa";

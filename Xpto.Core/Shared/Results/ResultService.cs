@@ -14,9 +14,5 @@ namespace Xpto.Core.Shared.Results
         {
             this.Messages = new List<string>();
         }
-
-
-
-
     }
 }

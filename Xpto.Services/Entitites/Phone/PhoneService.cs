@@ -14,6 +14,7 @@ namespace Xpto.Services.Entitites
     public class PhoneService : IPhoneService
     {
         private readonly IPhoneRepository _repository;
+
         public PhoneService(IPhoneRepository repository)
         {
             _repository = repository;
@@ -24,11 +25,13 @@ namespace Xpto.Services.Entitites
             _repository.InsertMany(phones);
             return phones;
         }
+
         public Phone Update(Phone phone)
         {
         _repository.Update(phone);
             return phone;
         }
+
         public int Delete(int code)
         {
             var phone = _repository.Get(code);   
@@ -41,36 +44,23 @@ namespace Xpto.Services.Entitites
             return code;
 
         }
+
         public Phone Get(int code)
         {
             var phone = _repository.Get(code);
             return phone;
         }
+
         public IList<Phone> List()
         {
             var list = _repository.Find();
             return list;
         }
+
         public IList<Phone> List(int customerCode)
         {
             var list = _repository.Find(customerCode);
             return list;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

@@ -21,7 +21,6 @@ namespace Xpto.UI.Customers
     {
         private readonly ICustomerService _customerService;
 
-
         public frmCustomerSearch(ICustomerService customerService)
         {
             _customerService = customerService;
@@ -29,35 +28,6 @@ namespace Xpto.UI.Customers
         }
 
         private void frmCustomerSearch_Load(object sender, EventArgs e)
-        {
-            this.LoadCustomers();
-        }
-
-        private void LoadCustomers()
-        {
-            var dt = this._customerService.LoadDataTable();
-            this.dvgSearch.DataSource = dt;
-            this.dvgSearch.Columns["id"].Visible = false;
-            this.dvgSearch.Columns["creation_date"].Visible = false;
-            this.dvgSearch.Columns["creation_user_id"].Visible = false;
-            this.dvgSearch.Columns["creation_user_name"].Visible = false;
-            this.dvgSearch.Columns["change_date"].Visible = false;
-            this.dvgSearch.Columns["change_user_id"].Visible = false;
-            this.dvgSearch.Columns["change_user_name"].Visible = false;
-
-
-            for (int i = 0; i < this.dvgSearch.Columns.Count; i++)
-            {
-                this.dvgSearch.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void CustomerChanged(Customer customer)
         {
             this.LoadCustomers();
         }
@@ -92,11 +62,6 @@ namespace Xpto.UI.Customers
             frm.Show(this);
         }
 
-        private void btnFind_Click(object sender, EventArgs e)
-        {
-            this.LoadCustomers();
-        }
-
         private void editarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var code = int.Parse(this.dvgSearch.SelectedRows[0].Cells[1].Value?.ToString());
@@ -110,6 +75,40 @@ namespace Xpto.UI.Customers
 
 
             frm.Show(this);
+        }
+
+        private void btnFind_Click(object sender, EventArgs e)
+        {
+            this.LoadCustomers();
+        }
+
+        private void LoadCustomers()
+        {
+            var dt = this._customerService.LoadDataTable();
+            this.dvgSearch.DataSource = dt;
+            this.dvgSearch.Columns["id"].Visible = false;
+            this.dvgSearch.Columns["creation_date"].Visible = false;
+            this.dvgSearch.Columns["creation_user_id"].Visible = false;
+            this.dvgSearch.Columns["creation_user_name"].Visible = false;
+            this.dvgSearch.Columns["change_date"].Visible = false;
+            this.dvgSearch.Columns["change_user_id"].Visible = false;
+            this.dvgSearch.Columns["change_user_name"].Visible = false;
+
+
+            for (int i = 0; i < this.dvgSearch.Columns.Count; i++)
+            {
+                this.dvgSearch.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            }
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void CustomerChanged(Customer customer)
+        {
+            this.LoadCustomers();
         }
 
         private void txtName_KeyDown(object sender, KeyEventArgs e)

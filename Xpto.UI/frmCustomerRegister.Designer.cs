@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerRegister));
             lblRegister = new Label();
             pnlRegister = new Panel();
-            btnDelete = new Button();
             dgvAddress = new DataGridView();
+            btnDelete = new Button();
             btnAddEmail = new Button();
             btnAddPhone = new Button();
             btnAddAddress = new Button();
@@ -40,7 +41,7 @@
             dgvPhone = new DataGridView();
             label2 = new Label();
             lblAdress = new Label();
-            button1 = new Button();
+            btnClose = new Button();
             btnRegister = new Button();
             cboPersonType = new ComboBox();
             dtpBirthDate = new DateTimePicker();
@@ -77,8 +78,8 @@
             // 
             pnlRegister.AutoSize = true;
             pnlRegister.BackColor = Color.FromArgb(37, 37, 37);
-            pnlRegister.Controls.Add(btnDelete);
             pnlRegister.Controls.Add(dgvAddress);
+            pnlRegister.Controls.Add(btnDelete);
             pnlRegister.Controls.Add(btnAddEmail);
             pnlRegister.Controls.Add(btnAddPhone);
             pnlRegister.Controls.Add(btnAddAddress);
@@ -87,7 +88,7 @@
             pnlRegister.Controls.Add(dgvPhone);
             pnlRegister.Controls.Add(label2);
             pnlRegister.Controls.Add(lblAdress);
-            pnlRegister.Controls.Add(button1);
+            pnlRegister.Controls.Add(btnClose);
             pnlRegister.Controls.Add(btnRegister);
             pnlRegister.Controls.Add(cboPersonType);
             pnlRegister.Controls.Add(dtpBirthDate);
@@ -107,6 +108,18 @@
             pnlRegister.Size = new Size(3679, 804);
             pnlRegister.TabIndex = 1;
             // 
+            // dgvAddress
+            // 
+            dgvAddress.BackgroundColor = Color.FromArgb(17, 17, 17);
+            dgvAddress.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvAddress.Location = new Point(920, 44);
+            dgvAddress.Name = "dgvAddress";
+            dgvAddress.RowTemplate.Height = 25;
+            dgvAddress.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvAddress.Size = new Size(641, 137);
+            dgvAddress.TabIndex = 29;
+            dgvAddress.CellDoubleClick += dgvAddress_CellDoubleClick;
+            // 
             // btnDelete
             // 
             btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -121,18 +134,6 @@
             btnDelete.Text = "Deletar";
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += btnDelete_Click;
-            // 
-            // dgvAddress
-            // 
-            dgvAddress.BackgroundColor = Color.FromArgb(17, 17, 17);
-            dgvAddress.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvAddress.Location = new Point(920, 47);
-            dgvAddress.Name = "dgvAddress";
-            dgvAddress.RowTemplate.Height = 25;
-            dgvAddress.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvAddress.Size = new Size(641, 137);
-            dgvAddress.TabIndex = 26;
-            dgvAddress.CellDoubleClick += dgvAddress_CellDoubleClick;
             // 
             // btnAddEmail
             // 
@@ -227,20 +228,20 @@
             lblAdress.TabIndex = 18;
             lblAdress.Text = "Endereço:";
             // 
-            // button1
+            // btnClose
             // 
-            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button1.BackColor = Color.FromArgb(51, 51, 51);
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            button1.ForeColor = SystemColors.Control;
-            button1.Location = new Point(1099, 560);
-            button1.Name = "button1";
-            button1.Size = new Size(150, 51);
-            button1.TabIndex = 16;
-            button1.Text = "Fechar";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnClose.BackColor = Color.FromArgb(51, 51, 51);
+            btnClose.FlatStyle = FlatStyle.Flat;
+            btnClose.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            btnClose.ForeColor = SystemColors.Control;
+            btnClose.Location = new Point(1099, 560);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(150, 51);
+            btnClose.TabIndex = 16;
+            btnClose.Text = "Fechar";
+            btnClose.UseVisualStyleBackColor = false;
+            btnClose.Click += btnClose_Click;
             // 
             // btnRegister
             // 
@@ -403,6 +404,7 @@
             Controls.Add(pnlRegister);
             Controls.Add(lblRegister);
             Font = new Font("Bahnschrift Condensed", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmCustomerRegister";
             Text = "Customer Register";
             WindowState = FormWindowState.Maximized;
@@ -427,7 +429,7 @@
         private Label lblBirthDate;
         private Label lblNickname;
         private Button btnRegister;
-        private Button button1;
+        private Button btnClose;
         private Label lblEmail;
         private Label label2;
         private Label lblAdress;
@@ -443,7 +445,7 @@
         public ComboBox cboPersonType;
         public DataGridView dgvEmail;
         public DataGridView dgvPhone;
-        public DataGridView dgvAddress;
         private Button btnDelete;
+        public DataGridView dgvAddress;
     }
 }

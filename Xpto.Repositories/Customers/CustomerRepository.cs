@@ -462,8 +462,5 @@ namespace Xpto.Repositories.Customers
             cm.Parameters.Add(new SqlParameter("@change_user_id", customer.ChangeUserId.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@change_user_name", customer.ChangeUserName.GetDbValue()));
         }
-
-        
-
     }
 }

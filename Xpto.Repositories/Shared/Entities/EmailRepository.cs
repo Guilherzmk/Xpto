@@ -22,8 +22,6 @@ namespace Xpto.Repositories.Shared.Entities
             _connectionProvider = connectionProvider;
         }
 
-
-
         public Email Insert(Email email)
         {
             var commandText = new StringBuilder()
@@ -62,6 +60,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return email;
         }
+
         public IList<Email> InsertMany(IList<Email> emails)
         {
             var commandText = new StringBuilder()
@@ -104,7 +103,6 @@ namespace Xpto.Repositories.Shared.Entities
             return emails;
         }
 
-
         public void Update(Email email)
         {
             var commandText = new StringBuilder()
@@ -131,6 +129,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             connection.Close();
         }
+
         public int Delete(int code)
         {
             var commandText = new StringBuilder()
@@ -151,6 +150,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return result;
         }
+
         public IList<Email> DeleteMany(IList<Email> emails)
         {
             var commandText = new StringBuilder()
@@ -178,6 +178,7 @@ namespace Xpto.Repositories.Shared.Entities
 
 
         }
+
         public Email Get(int code)
         {
             var commandText = this.GetSelectQuery()
@@ -208,6 +209,7 @@ namespace Xpto.Repositories.Shared.Entities
 
 
         }
+
         public IList<Email> Find()
         {
             var l = new List<Email>();
@@ -232,6 +234,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return l;
         }
+
         public IList<Email> Find(int customerCode)
         {
             var l = new List<Email>();
@@ -256,9 +259,6 @@ namespace Xpto.Repositories.Shared.Entities
 
             return l;
         }
-
-
-
 
         private void SetEmailParameters(SqlCommand cm, Email email)
         {

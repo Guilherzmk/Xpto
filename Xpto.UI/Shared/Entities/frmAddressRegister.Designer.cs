@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAddressRegister));
             panel1 = new Panel();
+            btnDelete = new Button();
             btnClose = new Button();
             btnRegister = new Button();
             txtNote = new TextBox();
@@ -50,7 +52,6 @@
             txtType = new TextBox();
             lblType = new Label();
             lblAddressRegister = new Label();
-            btnDelete = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -82,6 +83,21 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(805, 385);
             panel1.TabIndex = 0;
+            // 
+            // btnDelete
+            // 
+            btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnDelete.BackColor = Color.FromArgb(51, 51, 51);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            btnDelete.ForeColor = SystemColors.Control;
+            btnDelete.Location = new Point(486, 321);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(150, 51);
+            btnDelete.TabIndex = 22;
+            btnDelete.Text = "Deletar";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnClose
             // 
@@ -314,21 +330,6 @@
             lblAddressRegister.TabIndex = 1;
             lblAddressRegister.Text = "Endereço";
             // 
-            // btnDelete
-            // 
-            btnDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnDelete.BackColor = Color.FromArgb(51, 51, 51);
-            btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            btnDelete.ForeColor = SystemColors.Control;
-            btnDelete.Location = new Point(486, 321);
-            btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(150, 51);
-            btnDelete.TabIndex = 22;
-            btnDelete.Text = "Deletar";
-            btnDelete.UseVisualStyleBackColor = false;
-            btnDelete.Click += btnDelete_Click;
-            // 
             // frmAddressRegister
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -337,6 +338,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(lblAddressRegister);
             Controls.Add(panel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmAddressRegister";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmAddressRegister";

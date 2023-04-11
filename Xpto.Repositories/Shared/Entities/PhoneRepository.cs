@@ -131,6 +131,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             connection.Close();
         }
+
         public int Delete(int code)
         {
             var commandText = new StringBuilder()
@@ -151,6 +152,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return result;
         }
+
         public  IList<Phone> DeleteMany(IList<Phone> phones)
         {
             var commandText = new StringBuilder()
@@ -178,7 +180,6 @@ namespace Xpto.Repositories.Shared.Entities
 
         }
 
-
         public Phone Get(int code)
         {
             var commandText = this.GetSelectQuery()
@@ -205,6 +206,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return phone;
         }
+
         public IList<Phone> Find()
         {
             var l = new List<Phone>();
@@ -229,6 +231,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return l;
         }
+
         public IList<Phone> Find(int customerCode)
         {
             var l = new List<Phone>();
@@ -253,6 +256,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return l;
         }
+
         private void SetPhoneParameters(SqlCommand cm, Phone phone)
         {
             cm.Parameters.Add(new SqlParameter("@id", phone.Id.GetDbValue()));
@@ -263,6 +267,7 @@ namespace Xpto.Repositories.Shared.Entities
             cm.Parameters.Add(new SqlParameter("@note", phone.Note.GetDbValue()));
 
         }
+
         public StringBuilder GetSelectQuery(int? code = null)
         {
             var sb = new StringBuilder()
@@ -283,6 +288,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             return sb;
         }
+
         private static Phone LoadDataReader(SqlDataReader dataReader)
         {
             var phone = new Phone();
@@ -298,6 +304,7 @@ namespace Xpto.Repositories.Shared.Entities
             return phone;
 
         }
+
         public StringBuilder GetSelectPhoneQuery(int customerCode)
         {
             var sb = new StringBuilder()
