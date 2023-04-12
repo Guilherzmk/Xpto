@@ -13,7 +13,6 @@ public interface ICustomerService : IResultService
     Customer Update(Guid id, CustomerUpdateParams updateParams);
     int Delete(int code);
     Customer Get(int code);
-    Address GetAddress(Guid id);
     IList<Customer> List();
     DataTable LoadDataTable();
 }

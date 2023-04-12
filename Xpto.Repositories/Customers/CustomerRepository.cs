@@ -4,15 +4,11 @@
 
 using System.Data;
 using System.Data.SqlClient;
-using System.Net;
 using System.Text;
 using Xpto.Core.Customers;
-using Xpto.Core.Shared.Entities;
 using Xpto.Core.Shared.Entities.Address;
 using Xpto.Core.Shared.Entities.Email;
 using Xpto.Core.Shared.Entities.Phone;
-using Xpto.Repositories.Shared;
-using Xpto.Repositories.Shared.Entities;
 using Xpto.Repositories.Shared.Sql;
 
 namespace Xpto.Repositories.Customers
@@ -228,34 +224,6 @@ namespace Xpto.Repositories.Customers
             return customer;
         }
 
-        public Address GetAddress(Guid id)
-        {
-            var commandText = this.GetAddressQuery();
-            commandText.AppendLine(" WHERE [id] = @id");
-
-            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-            connection.Open();
-            var cm = connection.CreateCommand();
-
-            cm.CommandText = commandText.ToString();
-
-            cm.Parameters.Add(new SqlParameter("@id", id));
-
-            var dataReader = cm.ExecuteReader();
-
-            Address address = null;
-
-            while (dataReader.Read())
-            {
-                address = LoadAddressDataReader(dataReader);
-            }
-
-            connection.Close();
-
-            return address;
-
-        }
-
         public IList<Customer> Find()
         {
             var l = new List<Customer>();
@@ -314,12 +282,12 @@ namespace Xpto.Repositories.Customers
                 .AppendLine(" SELECT")
                 .AppendLine(" A.[id],")
                 .AppendLine(" A.[code] AS Código,")
-                .AppendLine(" A.[name],")
-                .AppendLine(" A.[nickname],")
-                .AppendLine(" A.[birth_date],")
-                .AppendLine(" A.[identity],")
-                .AppendLine(" A.[person_type],")
-                .AppendLine(" A.[note],")
+                .AppendLine(" A.[name] AS Nome,")
+                .AppendLine(" A.[nickname] AS 'Nome Fantasia',")
+                .AppendLine(" A.[birth_date] AS 'Data de Nascimento',")
+                .AppendLine(" A.[identity] AS 'CPF/CNPJ',")
+                .AppendLine(" A.[person_type] AS 'Tipo de Pessoa',")
+                .AppendLine(" A.[note] AS 'Anotações',")
                 .AppendLine(" A.[creation_date],")
                 .AppendLine(" A.[creation_user_id],")
                 .AppendLine(" A.[creation_user_name],")
@@ -367,26 +335,6 @@ namespace Xpto.Repositories.Customers
             return customer;
         }
 
-        private static Address LoadAddressDataReader(SqlDataReader dataReader)
-        {
-            var address = new Address();
-
-            address.Id = dataReader.GetGuid("id");
-            //address.Code = dataReader.GetInt32("code");
-            address.CustomerCode = dataReader.GetInt32("customer_code");
-            address.Type = dataReader.GetString("type");
-            address.Street = dataReader.GetString("street");
-            address.Number = dataReader.GetString("number");
-            address.Complement = dataReader.GetString("complement");
-            address.District = dataReader.GetString("district");
-            address.City = dataReader.GetString("city");
-            address.State = dataReader.GetString("state");
-            address.ZipCode = dataReader.GetString("zip_code");
-            address.Note = dataReader.GetString("note");
-
-            return address;
-        }
-        
         public long Count()
         {
             var commandText = new StringBuilder()
@@ -407,6 +355,7 @@ namespace Xpto.Repositories.Customers
 
             return result;
         }
+
         public StringBuilder GetSelectQuery()
         {
             var sb = new StringBuilder()
@@ -425,24 +374,6 @@ namespace Xpto.Repositories.Customers
                 .AppendLine(" A.[change_user_id],")
                 .AppendLine(" A.[change_user_name]")
                 .AppendLine(" FROM [tb_customer] AS A");
-            return sb;
-        }
-
-        public StringBuilder GetAddressQuery()
-        {
-            var sb = new StringBuilder()
-                .AppendLine(" SELECT")
-                .AppendLine(" A.[id],")
-                .AppendLine(" A.[customer_code],")
-                .AppendLine(" A.[street],")
-                .AppendLine(" A.[number],")
-                .AppendLine(" A.[complement],")
-                .AppendLine(" A.[district],")
-                .AppendLine(" A.[city],")
-                .AppendLine(" A.[state],")
-                .AppendLine(" A.[zip_code],")
-                .AppendLine(" A.[note]")
-                .AppendLine(" FROM [tb_customer_address] AS A");
             return sb;
         }
 

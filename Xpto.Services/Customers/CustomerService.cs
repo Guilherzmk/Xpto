@@ -59,12 +59,6 @@ namespace Xpto.Services.Customers
             return customer;
         }
 
-        public Address GetAddress(Guid id)
-        {
-            var address = _repository.GetAddress(id);
-            return address;
-        }
-
         public IList<Customer> List()
         {
            

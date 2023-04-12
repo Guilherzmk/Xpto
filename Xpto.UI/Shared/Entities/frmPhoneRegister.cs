@@ -37,20 +37,28 @@ namespace Xpto.UI.Shared.Entities
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
-            Action = ActionType.Create;
-
-            this._phone = new Phone()
+            try
             {
-                Type = txtType.Text,
-                Ddd = Convert.ToInt32(txtDdd.Text),
-                Number = Convert.ToInt64(txtNumber.Text),
-                Note = txtNote.Text
-            };
+                Action = ActionType.Create;
 
-            if (this._id != Guid.Empty)
-                this._phone.Id = this._id;
+                this._phone = new Phone()
+                {
+                    Type = txtType.Text,
+                    Ddd = Convert.ToInt32(txtDdd.Text),
+                    Number = Convert.ToInt64(txtNumber.Text),
+                    Note = txtNote.Text
+                };
 
-            this.Close();
+                if (this._id != Guid.Empty)
+                    this._phone.Id = this._id;
+
+                this.Close();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

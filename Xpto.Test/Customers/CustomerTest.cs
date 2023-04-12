@@ -162,17 +162,7 @@ namespace Xpto.Test.Customers
             customer.Name = result.Name;
         }
 
-        [TestMethod]
-
-        public void GetAddress()
-        {
-            
-
-            var codeGuid = Guid.Parse("6D2A321F-3D07-437E-95D7-AC422825E9E7");
-            var result = customerService.GetAddress(codeGuid);
-        }
-
-
+ 
         [TestMethod]
         public void List()
         {

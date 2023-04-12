@@ -8,13 +8,19 @@ namespace Xpto.Core.Customers;
 public interface ICustomerRepository
 {
     Customer Insert(Customer customer);
+
     Customer Update(Customer customer);
+
     int Delete(int code);
+
     Customer Get(Guid id);
+
     Customer Get(int code);
-    Address GetAddress(Guid id);
+
     IList<Customer> Find();
+
     DataTable LoadDataTable();
+
     long Count();
 
     Customer FilterName(string name);

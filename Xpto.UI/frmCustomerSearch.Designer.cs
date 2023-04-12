@@ -32,16 +32,14 @@
             lblName = new Label();
             txtName = new TextBox();
             btnExit = new Button();
-            dvgSearch = new DataGridView();
+            dgvSearch = new DataGridView();
             clienteToolStripMenuItem = new ToolStripMenuItem();
             cadastrarToolStripMenuItem = new ToolStripMenuItem();
             editarToolStripMenuItem = new ToolStripMenuItem();
             mstCustomer = new MenuStrip();
             panel1 = new Panel();
             btnFind = new Button();
-            lblIdentity = new Label();
-            txtIdentity = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)dvgSearch).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvSearch).BeginInit();
             mstCustomer.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -84,18 +82,18 @@
             btnExit.UseVisualStyleBackColor = false;
             btnExit.Click += btnExit_Click;
             // 
-            // dvgSearch
+            // dgvSearch
             // 
-            dvgSearch.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dvgSearch.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dvgSearch.BackgroundColor = Color.FromArgb(17, 17, 17);
-            dvgSearch.Location = new Point(13, 12);
-            dvgSearch.Name = "dvgSearch";
-            dvgSearch.RowTemplate.Height = 25;
-            dvgSearch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dvgSearch.Size = new Size(1186, 686);
-            dvgSearch.TabIndex = 9;
-            dvgSearch.CellDoubleClick += dvgSearch_CellDoubleClick;
+            dgvSearch.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvSearch.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvSearch.BackgroundColor = Color.FromArgb(17, 17, 17);
+            dgvSearch.Location = new Point(13, 12);
+            dgvSearch.Name = "dgvSearch";
+            dgvSearch.RowTemplate.Height = 25;
+            dgvSearch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvSearch.Size = new Size(1186, 686);
+            dgvSearch.TabIndex = 9;
+            dgvSearch.CellDoubleClick += dvgSearch_CellDoubleClick;
             // 
             // clienteToolStripMenuItem
             // 
@@ -135,7 +133,7 @@
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
             panel1.Controls.Add(btnFind);
-            panel1.Controls.Add(dvgSearch);
+            panel1.Controls.Add(dgvSearch);
             panel1.Controls.Add(btnExit);
             panel1.Location = new Point(300, 30);
             panel1.Name = "panel1";
@@ -157,36 +155,12 @@
             btnFind.UseVisualStyleBackColor = false;
             btnFind.Click += btnFind_Click;
             // 
-            // lblIdentity
-            // 
-            lblIdentity.AutoSize = true;
-            lblIdentity.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            lblIdentity.ForeColor = SystemColors.Control;
-            lblIdentity.Location = new Point(12, 98);
-            lblIdentity.Name = "lblIdentity";
-            lblIdentity.Size = new Size(91, 29);
-            lblIdentity.TabIndex = 12;
-            lblIdentity.Text = "CPF/CNPJ:";
-            // 
-            // txtIdentity
-            // 
-            txtIdentity.BackColor = Color.FromArgb(17, 17, 17);
-            txtIdentity.BorderStyle = BorderStyle.FixedSingle;
-            txtIdentity.ForeColor = SystemColors.Window;
-            txtIdentity.Location = new Point(109, 105);
-            txtIdentity.Name = "txtIdentity";
-            txtIdentity.Size = new Size(169, 22);
-            txtIdentity.TabIndex = 13;
-            txtIdentity.KeyDown += txtIdentity_KeyDown;
-            // 
             // frmCustomerSearch
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(51, 51, 51);
             ClientSize = new Size(1538, 881);
-            Controls.Add(txtIdentity);
-            Controls.Add(lblIdentity);
             Controls.Add(panel1);
             Controls.Add(txtName);
             Controls.Add(lblName);
@@ -198,7 +172,7 @@
             Text = "Pesquisa";
             WindowState = FormWindowState.Maximized;
             Load += frmCustomerSearch_Load;
-            ((System.ComponentModel.ISupportInitialize)dvgSearch).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvSearch).EndInit();
             mstCustomer.ResumeLayout(false);
             mstCustomer.PerformLayout();
             panel1.ResumeLayout(false);
@@ -210,15 +184,13 @@
         private Label lblName;
         private TextBox txtName;
         private Button btnExit;
-        private DataGridView dvgSearch;
+        private DataGridView dgvSearch;
         private ToolStripMenuItem clienteToolStripMenuItem;
         private ToolStripMenuItem cadastrarToolStripMenuItem;
         private MenuStrip mstCustomer;
         private Panel panel1;
         private Button btnFind;
         private ToolStripMenuItem editarToolStripMenuItem;
-        private Label lblIdentity;
-        private TextBox txtIdentity;
     }
 
 

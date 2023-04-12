@@ -31,14 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerRegister));
             lblRegister = new Label();
             pnlRegister = new Panel();
-            dgvAddress = new DataGridView();
+            lvwEmail = new ListView();
+            lvwPhone = new ListView();
+            lvwAddress = new ListView();
             btnDelete = new Button();
             btnAddEmail = new Button();
             btnAddPhone = new Button();
             btnAddAddress = new Button();
-            dgvEmail = new DataGridView();
             lblEmail = new Label();
-            dgvPhone = new DataGridView();
             label2 = new Label();
             lblAdress = new Label();
             btnClose = new Button();
@@ -57,9 +57,6 @@
             lblName = new Label();
             lblCode = new Label();
             pnlRegister.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvAddress).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dgvEmail).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dgvPhone).BeginInit();
             SuspendLayout();
             // 
             // lblRegister
@@ -78,14 +75,14 @@
             // 
             pnlRegister.AutoSize = true;
             pnlRegister.BackColor = Color.FromArgb(37, 37, 37);
-            pnlRegister.Controls.Add(dgvAddress);
+            pnlRegister.Controls.Add(lvwEmail);
+            pnlRegister.Controls.Add(lvwPhone);
+            pnlRegister.Controls.Add(lvwAddress);
             pnlRegister.Controls.Add(btnDelete);
             pnlRegister.Controls.Add(btnAddEmail);
             pnlRegister.Controls.Add(btnAddPhone);
             pnlRegister.Controls.Add(btnAddAddress);
-            pnlRegister.Controls.Add(dgvEmail);
             pnlRegister.Controls.Add(lblEmail);
-            pnlRegister.Controls.Add(dgvPhone);
             pnlRegister.Controls.Add(label2);
             pnlRegister.Controls.Add(lblAdress);
             pnlRegister.Controls.Add(btnClose);
@@ -108,17 +105,45 @@
             pnlRegister.Size = new Size(3679, 804);
             pnlRegister.TabIndex = 1;
             // 
-            // dgvAddress
+            // lvwEmail
             // 
-            dgvAddress.BackgroundColor = Color.FromArgb(17, 17, 17);
-            dgvAddress.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvAddress.Location = new Point(920, 44);
-            dgvAddress.Name = "dgvAddress";
-            dgvAddress.RowTemplate.Height = 25;
-            dgvAddress.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvAddress.Size = new Size(641, 137);
-            dgvAddress.TabIndex = 29;
-            dgvAddress.CellDoubleClick += dgvAddress_CellDoubleClick;
+            lvwEmail.BackColor = Color.FromArgb(17, 17, 17);
+            lvwEmail.BorderStyle = BorderStyle.None;
+            lvwEmail.ForeColor = SystemColors.Window;
+            lvwEmail.FullRowSelect = true;
+            lvwEmail.Location = new Point(920, 400);
+            lvwEmail.Name = "lvwEmail";
+            lvwEmail.Size = new Size(641, 137);
+            lvwEmail.TabIndex = 30;
+            lvwEmail.UseCompatibleStateImageBehavior = false;
+            lvwEmail.DoubleClick += lvwEmail_DoubleClick;
+            // 
+            // lvwPhone
+            // 
+            lvwPhone.BackColor = Color.FromArgb(17, 17, 17);
+            lvwPhone.BorderStyle = BorderStyle.None;
+            lvwPhone.ForeColor = SystemColors.Window;
+            lvwPhone.FullRowSelect = true;
+            lvwPhone.Location = new Point(920, 224);
+            lvwPhone.Name = "lvwPhone";
+            lvwPhone.Size = new Size(641, 137);
+            lvwPhone.TabIndex = 29;
+            lvwPhone.UseCompatibleStateImageBehavior = false;
+            lvwPhone.DoubleClick += lvwPhone_DoubleClick;
+            // 
+            // lvwAddress
+            // 
+            lvwAddress.BackColor = Color.FromArgb(17, 17, 17);
+            lvwAddress.BorderStyle = BorderStyle.None;
+            lvwAddress.ForeColor = SystemColors.Window;
+            lvwAddress.FullRowSelect = true;
+            lvwAddress.Location = new Point(920, 44);
+            lvwAddress.MultiSelect = false;
+            lvwAddress.Name = "lvwAddress";
+            lvwAddress.Size = new Size(641, 137);
+            lvwAddress.TabIndex = 28;
+            lvwAddress.UseCompatibleStateImageBehavior = false;
+            lvwAddress.DoubleClick += lvwAddress_DoubleClick;
             // 
             // btnDelete
             // 
@@ -171,18 +196,6 @@
             btnAddAddress.UseVisualStyleBackColor = false;
             btnAddAddress.Click += btnAddAddress_Click;
             // 
-            // dgvEmail
-            // 
-            dgvEmail.BackgroundColor = Color.FromArgb(17, 17, 17);
-            dgvEmail.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvEmail.Location = new Point(920, 400);
-            dgvEmail.Name = "dgvEmail";
-            dgvEmail.RowTemplate.Height = 25;
-            dgvEmail.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvEmail.Size = new Size(641, 137);
-            dgvEmail.TabIndex = 22;
-            dgvEmail.CellDoubleClick += dgvEmail_CellDoubleClick;
-            // 
             // lblEmail
             // 
             lblEmail.AutoSize = true;
@@ -193,18 +206,6 @@
             lblEmail.Size = new Size(62, 29);
             lblEmail.TabIndex = 21;
             lblEmail.Text = "Email:";
-            // 
-            // dgvPhone
-            // 
-            dgvPhone.BackgroundColor = Color.FromArgb(17, 17, 17);
-            dgvPhone.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvPhone.Location = new Point(920, 224);
-            dgvPhone.Name = "dgvPhone";
-            dgvPhone.RowTemplate.Height = 25;
-            dgvPhone.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPhone.Size = new Size(641, 137);
-            dgvPhone.TabIndex = 20;
-            dgvPhone.CellDoubleClick += dgvPhone_CellDoubleClick;
             // 
             // label2
             // 
@@ -411,9 +412,6 @@
             Load += CustomerRegister_Load;
             pnlRegister.ResumeLayout(false);
             pnlRegister.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvAddress).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgvEmail).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgvPhone).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -443,9 +441,9 @@
         public TextBox txtIdentity;
         public TextBox txtNickname;
         public ComboBox cboPersonType;
-        public DataGridView dgvEmail;
-        public DataGridView dgvPhone;
         private Button btnDelete;
-        public DataGridView dgvAddress;
+        private ListView lvwAddress;
+        private ListView lvwPhone;
+        private ListView lvwEmail;
     }
 }

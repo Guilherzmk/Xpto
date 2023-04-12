@@ -11,9 +11,6 @@ using System.Windows.Forms;
 using Xpto.Services.Customers;
 using Microsoft.Extensions.DependencyInjection;
 using Xpto.Core.Customers;
-using System.Runtime.Versioning;
-using static Xpto.UI.Customers.frmCustomerRegister;
-using Xpto.Core.Shared.Entities.Address;
 
 namespace Xpto.UI.Customers
 {
@@ -36,7 +33,7 @@ namespace Xpto.UI.Customers
         {
             try
             {
-                var code = int.Parse(this.dvgSearch.SelectedRows[0].Cells[1].Value?.ToString());
+                var code = int.Parse(this.dgvSearch.SelectedRows[0].Cells[1].Value?.ToString());
 
                 var customer = this._customerService.Get(code);
                 if (customer == null)
@@ -48,10 +45,10 @@ namespace Xpto.UI.Customers
 
                 frm.ShowDialog(this);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
 
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -64,7 +61,7 @@ namespace Xpto.UI.Customers
 
         private void editarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var code = int.Parse(this.dvgSearch.SelectedRows[0].Cells[1].Value?.ToString());
+            var code = int.Parse(this.dgvSearch.SelectedRows[0].Cells[1].Value?.ToString());
 
             var customer = this._customerService.Get(code);
             if (customer == null)
@@ -85,19 +82,20 @@ namespace Xpto.UI.Customers
         private void LoadCustomers()
         {
             var dt = this._customerService.LoadDataTable();
-            this.dvgSearch.DataSource = dt;
-            this.dvgSearch.Columns["id"].Visible = false;
-            this.dvgSearch.Columns["creation_date"].Visible = false;
-            this.dvgSearch.Columns["creation_user_id"].Visible = false;
-            this.dvgSearch.Columns["creation_user_name"].Visible = false;
-            this.dvgSearch.Columns["change_date"].Visible = false;
-            this.dvgSearch.Columns["change_user_id"].Visible = false;
-            this.dvgSearch.Columns["change_user_name"].Visible = false;
+            this.dgvSearch.DataSource = dt;
+
+            this.dgvSearch.Columns["id"].Visible = false;
+            this.dgvSearch.Columns["creation_date"].Visible = false;
+            this.dgvSearch.Columns["creation_user_id"].Visible = false;
+            this.dgvSearch.Columns["creation_user_name"].Visible = false;
+            this.dgvSearch.Columns["change_date"].Visible = false;
+            this.dgvSearch.Columns["change_user_id"].Visible = false;
+            this.dgvSearch.Columns["change_user_name"].Visible = false;
 
 
-            for (int i = 0; i < this.dvgSearch.Columns.Count; i++)
+            for (int i = 0; i < this.dgvSearch.Columns.Count; i++)
             {
-                this.dvgSearch.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                this.dgvSearch.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             }
         }
 
@@ -122,25 +120,8 @@ namespace Xpto.UI.Customers
                 }
                 else
                 {
-                    (dvgSearch.DataSource as DataTable).DefaultView.RowFilter =
-                        String.Format("name like '%" + txtName.Text + "%'");
-                }
-            }
-        }
-
-        private void txtIdentity_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (string.IsNullOrEmpty(txtIdentity.Text))
-                {
-                    var msgText = "Insira algo para filtrar";
-                    MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    (dvgSearch.DataSource as DataTable).DefaultView.RowFilter =
-                        string.Format("identity like '%" + txtIdentity.Text + "%'");
+                    (dgvSearch.DataSource as DataTable).DefaultView.RowFilter =
+                        String.Format("Nome like '%" + txtName.Text + "%'");
                 }
             }
         }
