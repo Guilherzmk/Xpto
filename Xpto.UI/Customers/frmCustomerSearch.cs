@@ -11,12 +11,14 @@ using System.Windows.Forms;
 using Xpto.Services.Customers;
 using Microsoft.Extensions.DependencyInjection;
 using Xpto.Core.Customers;
+using Xpto.UI.Delegates;
 
 namespace Xpto.UI.Customers
 {
     public partial class frmCustomerSearch : Form
     {
         private readonly ICustomerService _customerService;
+        public event CustomerMensageDelegate Sucess;
 
         public frmCustomerSearch(ICustomerService customerService)
         {
@@ -33,7 +35,7 @@ namespace Xpto.UI.Customers
         {
             try
             {
-                var code = int.Parse(this.dgvSearch.SelectedRows[0].Cells[1].Value?.ToString());
+                var code = Guid.Parse(this.dgvSearch.SelectedRows[0].Cells[0].Value?.ToString());
 
                 var customer = this._customerService.Get(code);
                 if (customer == null)
@@ -41,27 +43,27 @@ namespace Xpto.UI.Customers
 
                 var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
                 frm.LoadCustomer(customer);
-                //frm.Change += CustomerChanged;
+
+                frm.Change += CustomerChanged;
 
                 frm.ShowDialog(this);
             }
             catch (Exception exception)
             {
-
                 MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void cadastrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
+            frm.Change += CustomerChanged;
             frm.Show(this);
         }
 
         private void editarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var code = int.Parse(this.dgvSearch.SelectedRows[0].Cells[1].Value?.ToString());
+            var code = Guid.Parse(this.dgvSearch.SelectedRows[0].Cells[0].Value?.ToString());
 
             var customer = this._customerService.Get(code);
             if (customer == null)
@@ -91,12 +93,6 @@ namespace Xpto.UI.Customers
             this.dgvSearch.Columns["change_date"].Visible = false;
             this.dgvSearch.Columns["change_user_id"].Visible = false;
             this.dgvSearch.Columns["change_user_name"].Visible = false;
-
-
-            for (int i = 0; i < this.dgvSearch.Columns.Count; i++)
-            {
-                this.dgvSearch.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -122,6 +118,33 @@ namespace Xpto.UI.Customers
                 {
                     (dgvSearch.DataSource as DataTable).DefaultView.RowFilter =
                         String.Format("Nome like '%" + txtName.Text + "%'");
+                }
+            }
+        }
+
+        private void dgvSearch_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mskCpf_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (string.IsNullOrEmpty(mskCpf.Text))
+                {
+                    var msgText = "Insira algo para filtrar";
+                    MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    (dgvSearch.DataSource as DataTable).DefaultView.RowFilter =
+                        String.Format("'CPF/CNPJ' like '%" + mskCpf.Text + "%'");
                 }
             }
         }

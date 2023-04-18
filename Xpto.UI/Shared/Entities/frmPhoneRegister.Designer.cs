@@ -30,15 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPhoneRegister));
             panel1 = new Panel();
+            mskNumber = new MaskedTextBox();
             btnDelete = new Button();
             btnClose = new Button();
             btnRegister = new Button();
             txtNote = new TextBox();
             lblNote = new Label();
-            txtNumber = new TextBox();
             lblNumber = new Label();
-            txtDdd = new TextBox();
-            lblDdd = new Label();
             txtType = new TextBox();
             lblType = new Label();
             lblPhoneRegister = new Label();
@@ -48,21 +46,30 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(mskNumber);
             panel1.Controls.Add(btnDelete);
             panel1.Controls.Add(btnClose);
             panel1.Controls.Add(btnRegister);
             panel1.Controls.Add(txtNote);
             panel1.Controls.Add(lblNote);
-            panel1.Controls.Add(txtNumber);
             panel1.Controls.Add(lblNumber);
-            panel1.Controls.Add(txtDdd);
-            panel1.Controls.Add(lblDdd);
             panel1.Controls.Add(txtType);
             panel1.Controls.Add(lblType);
             panel1.Location = new Point(-3, 70);
             panel1.Name = "panel1";
             panel1.Size = new Size(805, 382);
             panel1.TabIndex = 0;
+            // 
+            // mskNumber
+            // 
+            mskNumber.BackColor = Color.FromArgb(17, 17, 17);
+            mskNumber.BorderStyle = BorderStyle.FixedSingle;
+            mskNumber.ForeColor = SystemColors.Window;
+            mskNumber.Location = new Point(15, 100);
+            mskNumber.Mask = "(00)00000-0000";
+            mskNumber.Name = "mskNumber";
+            mskNumber.Size = new Size(312, 23);
+            mskNumber.TabIndex = 25;
             // 
             // btnDelete
             // 
@@ -114,7 +121,7 @@
             txtNote.BackColor = Color.FromArgb(17, 17, 17);
             txtNote.BorderStyle = BorderStyle.FixedSingle;
             txtNote.ForeColor = SystemColors.Window;
-            txtNote.Location = new Point(15, 216);
+            txtNote.Location = new Point(15, 158);
             txtNote.Name = "txtNote";
             txtNote.Size = new Size(312, 23);
             txtNote.TabIndex = 10;
@@ -124,53 +131,22 @@
             lblNote.AutoSize = true;
             lblNote.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblNote.ForeColor = SystemColors.ControlLightLight;
-            lblNote.Location = new Point(15, 184);
+            lblNote.Location = new Point(15, 126);
             lblNote.Name = "lblNote";
             lblNote.Size = new Size(111, 29);
             lblNote.TabIndex = 9;
             lblNote.Text = "Observação:";
-            // 
-            // txtNumber
-            // 
-            txtNumber.BackColor = Color.FromArgb(17, 17, 17);
-            txtNumber.BorderStyle = BorderStyle.FixedSingle;
-            txtNumber.ForeColor = SystemColors.Window;
-            txtNumber.Location = new Point(15, 158);
-            txtNumber.Name = "txtNumber";
-            txtNumber.Size = new Size(312, 23);
-            txtNumber.TabIndex = 8;
             // 
             // lblNumber
             // 
             lblNumber.AutoSize = true;
             lblNumber.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblNumber.ForeColor = SystemColors.ControlLightLight;
-            lblNumber.Location = new Point(15, 126);
+            lblNumber.Location = new Point(15, 68);
             lblNumber.Name = "lblNumber";
             lblNumber.Size = new Size(79, 29);
             lblNumber.TabIndex = 7;
             lblNumber.Text = "Número:";
-            // 
-            // txtDdd
-            // 
-            txtDdd.BackColor = Color.FromArgb(17, 17, 17);
-            txtDdd.BorderStyle = BorderStyle.FixedSingle;
-            txtDdd.ForeColor = SystemColors.Window;
-            txtDdd.Location = new Point(15, 100);
-            txtDdd.Name = "txtDdd";
-            txtDdd.Size = new Size(312, 23);
-            txtDdd.TabIndex = 6;
-            // 
-            // lblDdd
-            // 
-            lblDdd.AutoSize = true;
-            lblDdd.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            lblDdd.ForeColor = SystemColors.ControlLightLight;
-            lblDdd.Location = new Point(15, 68);
-            lblDdd.Name = "lblDdd";
-            lblDdd.Size = new Size(46, 29);
-            lblDdd.TabIndex = 5;
-            lblDdd.Text = "DDD:";
             // 
             // txtType
             // 
@@ -230,13 +206,11 @@
         private Label lblType;
         private TextBox txtType;
         private Label lblNote;
-        private TextBox txtNumber;
         private Label lblNumber;
-        private TextBox txtDdd;
-        private Label lblDdd;
         private TextBox txtNote;
         private Button btnRegister;
         private Button btnClose;
         private Button btnDelete;
+        private MaskedTextBox mskNumber;
     }
 }

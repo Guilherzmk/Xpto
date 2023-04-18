@@ -11,8 +11,8 @@ public interface ICustomerService : IResultService
 {
     Customer Create(CustomerCreateParams createParams);
     Customer Update(Guid id, CustomerUpdateParams updateParams);
-    int Delete(int code);
-    Customer Get(int code);
+    void Delete(Guid id);
+    Customer Get(Guid id);
     IList<Customer> List();
     DataTable LoadDataTable();
 }

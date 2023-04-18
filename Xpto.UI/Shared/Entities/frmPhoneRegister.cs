@@ -12,18 +12,21 @@ using Xpto.Core.Customers;
 using Xpto.Core.Shared.Entities.Address;
 using Xpto.Core.Shared.Entities.Email;
 using Xpto.Core.Shared.Entities.Phone;
+using Xpto.Core.Shared.Params;
 using Xpto.Core.Shared.Types;
 using Xpto.UI.Customers;
+using Xpto.UI.Delegates;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Xpto.UI.Shared.Entities
 {
     public partial class frmPhoneRegister : Form
     {
-        public Phone _phone { get; set; }
+        public PhoneParams _phone { get; set; }
+        public event PhoneConfirmDelegate Confirmed;
         public ActionType Action = ActionType.None;
         private Guid _id;
 
-        public Phone Phone => _phone;
 
         public frmPhoneRegister()
         {
@@ -40,17 +43,18 @@ namespace Xpto.UI.Shared.Entities
             try
             {
                 Action = ActionType.Create;
+                this._phone = new PhoneParams();
 
-                this._phone = new Phone()
-                {
-                    Type = txtType.Text,
-                    Ddd = Convert.ToInt32(txtDdd.Text),
-                    Number = Convert.ToInt64(txtNumber.Text),
-                    Note = txtNote.Text
-                };
+                _phone.Type = txtType.Text;
+                _phone.Ddd = Convert.ToInt32(mskNumber.Text.Substring(1, 2));
+                _phone.Number = Convert.ToInt64(mskNumber.Text.Substring(4, 5) + mskNumber.Text.Substring(10,4));
+                _phone.Note = txtNote.Text;
 
                 if (this._id != Guid.Empty)
                     this._phone.Id = this._id;
+
+                if (this.Confirmed is not null)
+                    this.Confirmed(_phone);
 
                 this.Close();
             }
@@ -58,14 +62,15 @@ namespace Xpto.UI.Shared.Entities
             {
                 MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            _phone = new Phone();
 
             Action = ActionType.Delete;
+
+            _phone = new PhoneParams();
 
             if (_phone.Id == Guid.Empty)
             {
@@ -94,8 +99,10 @@ namespace Xpto.UI.Shared.Entities
         {
             this._id = phone.Id;
             this.txtType.Text = phone.Type;
-            this.txtDdd.Text = phone.Ddd.ToString();
-            this.txtNumber.Text = phone.Number.ToString();
+            var ddd = Convert.ToInt32(this.mskNumber.Text.Substring(1, 2));
+            ddd = phone.Ddd;
+            var number = Convert.ToInt64(mskNumber.Text.Substring(4, 5) + mskNumber.Text.Substring(10, 4));
+            number = phone.Number;
             this.txtNote.Text = phone.Note;
         }
     }

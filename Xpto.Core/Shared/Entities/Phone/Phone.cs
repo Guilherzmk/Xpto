@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection.Emit;
+using Xpto.Core.Shared.Params;
 
 namespace Xpto.Core.Shared.Entities.Phone
 {
@@ -17,6 +19,34 @@ namespace Xpto.Core.Shared.Entities.Phone
         {
             Id = Guid.NewGuid();
         }
+
+        public Phone(PhoneParams phoneParams)
+        {
+            this.Id = Guid.NewGuid();
+
+            if (phoneParams.Id != null)
+                this.Id = (Guid)phoneParams.Id;
+
+            this.Type = phoneParams.Type;
+            this.Ddd = phoneParams.Ddd;
+            this.Number = phoneParams.Number;
+            this.Note = phoneParams.Note;
+        }
+
+        public PhoneParams ToParams()
+        {
+            var phone = new PhoneParams()
+            {
+                Id = this.Id,
+                Type = this.Type,
+                Ddd = this.Ddd,
+                Number = this.Number,
+                Note = this.Note
+            };
+
+            return phone;
+        }
+
 
         public override string ToString()
         {

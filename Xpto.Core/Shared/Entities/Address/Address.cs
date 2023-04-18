@@ -26,6 +26,44 @@ namespace Xpto.Core.Shared.Entities.Address
             Id = Guid.NewGuid();
         }
 
+        public Address(AddressParams addressParams)
+        {
+            this.Id = Guid.NewGuid();
+
+            if(addressParams.Id != null)
+                this.Id = (Guid)addressParams.Id;
+
+            this.Type = addressParams.Type;
+            this.Street = addressParams.Street;
+            this.Number = addressParams.Number;
+            this.Complement = addressParams.Complement;
+            this.District = addressParams.District;
+            this.City = addressParams.City;
+            this.State = addressParams.State;
+            this.ZipCode = addressParams.ZipCode;
+            this.Note = addressParams.Note;
+        }
+
+        public AddressParams ToParams()
+        {
+            var address = new AddressParams
+            {
+                Id = this.Id,
+                Type = this.Type,
+                Street = this.Street,
+                Number = this.Number,
+                Complement = this.Complement,
+                District = this.District,
+                City = this.City,
+                State = this.State,
+                ZipCode = this.ZipCode,
+                Note = this.Note
+            };
+
+            return address;
+        }
+
+
         public override string ToString()
         {
             return string.Join(" ", Street, Number, Complement, District, City, State, ZipCode);

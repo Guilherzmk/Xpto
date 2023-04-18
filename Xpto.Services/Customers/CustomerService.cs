@@ -40,22 +40,19 @@ namespace Xpto.Services.Customers
             return customer;
         }
 
-        public int Delete(int code)
+        public void Delete(Guid id)
         {
-            var customer = _repository.Get(code);
+            var customer = _repository.Get(id);
 
             if (customer != null)
             {
-                _repository.Delete(customer.Code);
+                _repository.Delete(customer.Id);
             }
-
-            return code;
-
         }
 
-        public Customer Get(int code)
+        public Customer Get(Guid id)
         {
-            var customer = _repository.Get(code);
+            var customer = _repository.Get(id);
             return customer;
         }
 

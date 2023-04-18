@@ -10,6 +10,11 @@ namespace Xpto.Core.Shared.Results
     {
         public IList<string> Messages { get; set; }
 
+        public ResultService()
+        {
+            this.Messages = new List<string>();
+        }
+
         public void ClearMessages()
         {
             this.Messages = new List<string>();

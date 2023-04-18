@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerRegister));
             lblRegister = new Label();
             pnlRegister = new Panel();
+            mskIdentity = new MaskedTextBox();
             lvwEmail = new ListView();
             lvwPhone = new ListView();
             lvwAddress = new ListView();
@@ -47,7 +48,6 @@
             dtpBirthDate = new DateTimePicker();
             txtNote = new TextBox();
             lblNote = new Label();
-            txtIdentity = new TextBox();
             lblIdentity = new Label();
             label1 = new Label();
             lblBirthDate = new Label();
@@ -75,6 +75,7 @@
             // 
             pnlRegister.AutoSize = true;
             pnlRegister.BackColor = Color.FromArgb(37, 37, 37);
+            pnlRegister.Controls.Add(mskIdentity);
             pnlRegister.Controls.Add(lvwEmail);
             pnlRegister.Controls.Add(lvwPhone);
             pnlRegister.Controls.Add(lvwAddress);
@@ -91,7 +92,6 @@
             pnlRegister.Controls.Add(dtpBirthDate);
             pnlRegister.Controls.Add(txtNote);
             pnlRegister.Controls.Add(lblNote);
-            pnlRegister.Controls.Add(txtIdentity);
             pnlRegister.Controls.Add(lblIdentity);
             pnlRegister.Controls.Add(label1);
             pnlRegister.Controls.Add(lblBirthDate);
@@ -104,6 +104,17 @@
             pnlRegister.Name = "pnlRegister";
             pnlRegister.Size = new Size(3679, 804);
             pnlRegister.TabIndex = 1;
+            // 
+            // mskIdentity
+            // 
+            mskIdentity.BackColor = Color.FromArgb(17, 17, 17);
+            mskIdentity.BorderStyle = BorderStyle.FixedSingle;
+            mskIdentity.Font = new Font("Bahnschrift Condensed", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            mskIdentity.ForeColor = SystemColors.Window;
+            mskIdentity.Location = new Point(13, 326);
+            mskIdentity.Name = "mskIdentity";
+            mskIdentity.Size = new Size(312, 23);
+            mskIdentity.TabIndex = 31;
             // 
             // lvwEmail
             // 
@@ -269,6 +280,7 @@
             cboPersonType.Name = "cboPersonType";
             cboPersonType.Size = new Size(312, 22);
             cboPersonType.TabIndex = 14;
+            cboPersonType.SelectedIndexChanged += cboPersonType_SelectedIndexChanged;
             // 
             // dtpBirthDate
             // 
@@ -298,16 +310,6 @@
             lblNote.Size = new Size(111, 29);
             lblNote.TabIndex = 10;
             lblNote.Text = "Observação:";
-            // 
-            // txtIdentity
-            // 
-            txtIdentity.BackColor = Color.FromArgb(17, 17, 17);
-            txtIdentity.BorderStyle = BorderStyle.FixedSingle;
-            txtIdentity.ForeColor = SystemColors.Window;
-            txtIdentity.Location = new Point(13, 326);
-            txtIdentity.Name = "txtIdentity";
-            txtIdentity.Size = new Size(312, 22);
-            txtIdentity.TabIndex = 9;
             // 
             // lblIdentity
             // 
@@ -438,12 +440,12 @@
         public TextBox txtName;
         public DateTimePicker dtpBirthDate;
         public TextBox txtNote;
-        public TextBox txtIdentity;
         public TextBox txtNickname;
         public ComboBox cboPersonType;
         private Button btnDelete;
         private ListView lvwAddress;
         private ListView lvwPhone;
         private ListView lvwEmail;
+        private MaskedTextBox mskIdentity;
     }
 }

@@ -8,11 +8,10 @@ namespace Xpto.Core.Shared.Entities.Phone
 {
     public interface IPhoneRepository
     {
-        Phone Insert(Phone phone);
-        IList<Phone> InsertMany(IList<Phone> phones);
-        void Update(Phone phone);
+        Phone Insert(int customerCode, Phone phone);
+        void Update(int customerCode, Phone phone);
         int Delete(int code);
-        IList<Phone> DeleteMany(IList<Phone> phones);
+        int DeleteByCustomer(int customerCode);
         Phone Get(int code);
         IList<Phone> Find();
         IList<Phone> Find(int customerCode);

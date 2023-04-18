@@ -39,6 +39,10 @@
             mstCustomer = new MenuStrip();
             panel1 = new Panel();
             btnFind = new Button();
+            lblCpf = new Label();
+            lblCnpj = new Label();
+            mskCpf = new MaskedTextBox();
+            maskedTextBox1 = new MaskedTextBox();
             ((System.ComponentModel.ISupportInitialize)dgvSearch).BeginInit();
             mstCustomer.SuspendLayout();
             panel1.SuspendLayout();
@@ -93,6 +97,7 @@
             dgvSearch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvSearch.Size = new Size(1186, 686);
             dgvSearch.TabIndex = 9;
+            dgvSearch.CellContentClick += dgvSearch_CellContentClick;
             dgvSearch.CellDoubleClick += dvgSearch_CellDoubleClick;
             // 
             // clienteToolStripMenuItem
@@ -155,12 +160,62 @@
             btnFind.UseVisualStyleBackColor = false;
             btnFind.Click += btnFind_Click;
             // 
+            // lblCpf
+            // 
+            lblCpf.AutoSize = true;
+            lblCpf.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            lblCpf.ForeColor = SystemColors.Control;
+            lblCpf.Location = new Point(58, 93);
+            lblCpf.Name = "lblCpf";
+            lblCpf.Size = new Size(45, 29);
+            lblCpf.TabIndex = 12;
+            lblCpf.Text = "CPF:";
+            lblCpf.Click += label1_Click;
+            // 
+            // lblCnpj
+            // 
+            lblCnpj.AutoSize = true;
+            lblCnpj.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            lblCnpj.ForeColor = SystemColors.Control;
+            lblCnpj.Location = new Point(48, 133);
+            lblCnpj.Name = "lblCnpj";
+            lblCnpj.Size = new Size(55, 29);
+            lblCnpj.TabIndex = 14;
+            lblCnpj.Text = "CNPJ:";
+            // 
+            // mskCpf
+            // 
+            mskCpf.BackColor = Color.FromArgb(17, 17, 17);
+            mskCpf.BorderStyle = BorderStyle.FixedSingle;
+            mskCpf.ForeColor = SystemColors.Window;
+            mskCpf.Location = new Point(109, 100);
+            mskCpf.Mask = "000.000.000-00";
+            mskCpf.Name = "mskCpf";
+            mskCpf.Size = new Size(169, 22);
+            mskCpf.TabIndex = 16;
+            mskCpf.KeyDown += mskCpf_KeyDown;
+            // 
+            // maskedTextBox1
+            // 
+            maskedTextBox1.BackColor = Color.FromArgb(17, 17, 17);
+            maskedTextBox1.BorderStyle = BorderStyle.FixedSingle;
+            maskedTextBox1.ForeColor = SystemColors.Window;
+            maskedTextBox1.Location = new Point(109, 140);
+            maskedTextBox1.Mask = "00.000.000/0001-00";
+            maskedTextBox1.Name = "maskedTextBox1";
+            maskedTextBox1.Size = new Size(169, 22);
+            maskedTextBox1.TabIndex = 17;
+            // 
             // frmCustomerSearch
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(51, 51, 51);
             ClientSize = new Size(1538, 881);
+            Controls.Add(maskedTextBox1);
+            Controls.Add(mskCpf);
+            Controls.Add(lblCnpj);
+            Controls.Add(lblCpf);
             Controls.Add(panel1);
             Controls.Add(txtName);
             Controls.Add(lblName);
@@ -191,6 +246,10 @@
         private Panel panel1;
         private Button btnFind;
         private ToolStripMenuItem editarToolStripMenuItem;
+        private Label lblCpf;
+        private Label lblCnpj;
+        private MaskedTextBox mskCpf;
+        private MaskedTextBox maskedTextBox1;
     }
 
 

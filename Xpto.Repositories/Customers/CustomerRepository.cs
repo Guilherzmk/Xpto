@@ -9,6 +9,7 @@ using Xpto.Core.Customers;
 using Xpto.Core.Shared.Entities.Address;
 using Xpto.Core.Shared.Entities.Email;
 using Xpto.Core.Shared.Entities.Phone;
+using Xpto.Core.Shared.Types;
 using Xpto.Repositories.Shared.Sql;
 
 namespace Xpto.Repositories.Customers
@@ -82,22 +83,28 @@ namespace Xpto.Repositories.Customers
             cm.ExecuteNonQuery();
 
             customer.Code = (int)code.Value;
-            customer.Addresses.Select(x => x.CustomerCode = customer.Code).ToList();
-            customer.Addresses = _addressRepository.InsertMany(customer.Addresses);
+            foreach (var address in customer.Addresses)
+            {
+                this._addressRepository.Insert(customer.Code, address);
+            }
+
+            foreach(var email in customer.Emails)
+            {
+                this._emailRepository.Insert(customer.Code, email);
+            }
 
             customer.Emails.Select(x => x.CustomerCode = customer.Code).ToList();
-            customer.Emails = _emailRepository.InsertMany(customer.Emails);
 
-            customer.Phones.Select(x => x.CustomerCode = customer.Code).ToList();
-            customer.Phones = _phoneRepository.InsertMany(customer.Phones);
-
-
+            foreach (var phone in customer.Phones)
+            {
+                this._phoneRepository.Insert(customer.Code, phone);
+            }
+            
             return customer;
         }
 
         public Customer Update(Customer customer)
         {
-
             var commandText = new StringBuilder()
             .AppendLine(" UPDATE [tb_customer]")
             .AppendLine(" SET")
@@ -113,7 +120,7 @@ namespace Xpto.Repositories.Customers
             .AppendLine(" [change_date] = @change_date,")
             .AppendLine(" [change_user_id] = @change_user_id,")
             .AppendLine(" [change_user_name] = @change_user_name")
-            .AppendLine(" WHERE [code] = @code" );
+            .AppendLine(" WHERE [id] = @id" );
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -121,34 +128,37 @@ namespace Xpto.Repositories.Customers
             var cm = connection.CreateCommand();
 
             cm.CommandText = commandText.ToString();
-
-            cm.Parameters.Add(new SqlParameter("@code", customer.Code));
 
             this.SetParameters(customer, cm);
 
             cm.ExecuteNonQuery();
 
-            customer.Addresses.Select(x => x.CustomerCode = customer.Code).ToList();
-            _addressRepository.Delete(customer.Code);
-            customer.Addresses = _addressRepository.InsertMany(customer.Addresses);
+            this._addressRepository.DeleteByCustomer(customer.Code);
+            foreach (var address in customer.Addresses)
+            {
+                this._addressRepository.Insert(customer.Code, address);
+            }
 
-            customer.Emails.Select(x => x.CustomerCode = customer.Code).ToList();
-            _emailRepository.Delete(customer.Code);
-            customer.Emails = _emailRepository.InsertMany(customer.Emails);
+            this._emailRepository.DeleteByCustomer(customer.Code);
+            foreach (var email in customer.Emails)
+            {
+                this._emailRepository.Insert(customer.Code, email);
+            }
 
-            customer.Phones.Select(x => x.CustomerCode = customer.Code).ToList();
-            _phoneRepository.Delete(customer.Code);
-            customer.Phones = _phoneRepository.InsertMany(customer.Phones);
-
-
+            this._phoneRepository.DeleteByCustomer(customer.Code);
+            foreach (var phone in customer.Phones)
+            {
+                this._phoneRepository.Insert(customer.Code, phone);
+            }
+            
             return customer;
         }
 
-        public int Delete(int code)
+        public void Delete(Guid id)
         {
             var commandText = new StringBuilder()
             .AppendLine(" DELETE FROM [tb_customer]")
-            .AppendLine(" WHERE [code] = @code");
+            .AppendLine(" WHERE [id] = @id");
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -156,14 +166,16 @@ namespace Xpto.Repositories.Customers
 
             cm.CommandText = commandText.ToString();
 
-            cm.Parameters.Add(new SqlParameter("@code", code));
+            cm.Parameters.Add(new SqlParameter("@id", id));
 
             var result = cm.ExecuteNonQuery();
 
             connection.Close();
-
-            return result;
         }
+
+        
+        
+
 
         public Customer Get(Guid id)
         {
@@ -187,10 +199,13 @@ namespace Xpto.Repositories.Customers
                 customer = LoadDataReader(dataReader);
             }
 
+            customer.Addresses = this._addressRepository.Find(customer.Code);
+            customer.Phones = this._phoneRepository.Find(customer.Code);
+            customer.Emails = this._emailRepository.Find(customer.Code);
+
             connection.Close();
 
             return customer;
-
         }
 
         public Customer Get(int code)
@@ -323,6 +338,7 @@ namespace Xpto.Repositories.Customers
             customer.Name = dataReader.GetString( "name");
             customer.Nickname = dataReader.GetString("nickname");
             customer.BirthDate = dataReader.GetDateTime("birth_date");
+            customer.Identity = dataReader.GetString("identity");
             customer.PersonType = dataReader.GetString("person_type");
             customer.Note = dataReader.GetString("note");
             customer.CreationDate = dataReader.GetDateTime("creation_date");
@@ -365,6 +381,7 @@ namespace Xpto.Repositories.Customers
                 .AppendLine(" A.[name],")
                 .AppendLine(" A.[nickname],")
                 .AppendLine(" A.[birth_date],")
+                .AppendLine(" A.[identity],")
                 .AppendLine(" A.[person_type],")
                 .AppendLine(" A.[note],")
                 .AppendLine(" A.[creation_date],")

@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAddressRegister));
             panel1 = new Panel();
+            mskCep = new MaskedTextBox();
             btnDelete = new Button();
             btnClose = new Button();
             btnRegister = new Button();
             txtNote = new TextBox();
             lblNote = new Label();
-            txtZipCode = new TextBox();
             lblZipCode = new Label();
             cboState = new ComboBox();
             lblState = new Label();
@@ -58,12 +58,12 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(mskCep);
             panel1.Controls.Add(btnDelete);
             panel1.Controls.Add(btnClose);
             panel1.Controls.Add(btnRegister);
             panel1.Controls.Add(txtNote);
             panel1.Controls.Add(lblNote);
-            panel1.Controls.Add(txtZipCode);
             panel1.Controls.Add(lblZipCode);
             panel1.Controls.Add(cboState);
             panel1.Controls.Add(lblState);
@@ -83,6 +83,18 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(805, 385);
             panel1.TabIndex = 0;
+            // 
+            // mskCep
+            // 
+            mskCep.BackColor = Color.FromArgb(17, 17, 17);
+            mskCep.BorderStyle = BorderStyle.FixedSingle;
+            mskCep.ForeColor = SystemColors.Window;
+            mskCep.Location = new Point(16, 44);
+            mskCep.Mask = "00000-000";
+            mskCep.Name = "mskCep";
+            mskCep.Size = new Size(311, 23);
+            mskCep.TabIndex = 23;
+            mskCep.KeyDown += mskCep_KeyDown;
             // 
             // btnDelete
             // 
@@ -134,7 +146,7 @@
             txtNote.BackColor = Color.FromArgb(17, 17, 17);
             txtNote.BorderStyle = BorderStyle.FixedSingle;
             txtNote.ForeColor = SystemColors.Window;
-            txtNote.Location = new Point(393, 218);
+            txtNote.Location = new Point(388, 219);
             txtNote.Name = "txtNote";
             txtNote.Size = new Size(312, 23);
             txtNote.TabIndex = 19;
@@ -144,28 +156,18 @@
             lblNote.AutoSize = true;
             lblNote.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblNote.ForeColor = SystemColors.ControlLightLight;
-            lblNote.Location = new Point(394, 186);
+            lblNote.Location = new Point(388, 187);
             lblNote.Name = "lblNote";
             lblNote.Size = new Size(111, 29);
             lblNote.TabIndex = 18;
             lblNote.Text = "Observação:";
-            // 
-            // txtZipCode
-            // 
-            txtZipCode.BackColor = Color.FromArgb(17, 17, 17);
-            txtZipCode.BorderStyle = BorderStyle.FixedSingle;
-            txtZipCode.ForeColor = SystemColors.Window;
-            txtZipCode.Location = new Point(393, 160);
-            txtZipCode.Name = "txtZipCode";
-            txtZipCode.Size = new Size(312, 23);
-            txtZipCode.TabIndex = 17;
             // 
             // lblZipCode
             // 
             lblZipCode.AutoSize = true;
             lblZipCode.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblZipCode.ForeColor = SystemColors.ControlLightLight;
-            lblZipCode.Location = new Point(394, 128);
+            lblZipCode.Location = new Point(18, 12);
             lblZipCode.Name = "lblZipCode";
             lblZipCode.Size = new Size(45, 29);
             lblZipCode.TabIndex = 16;
@@ -177,7 +179,7 @@
             cboState.ForeColor = SystemColors.Window;
             cboState.FormattingEnabled = true;
             cboState.Items.AddRange(new object[] { "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO" });
-            cboState.Location = new Point(393, 102);
+            cboState.Location = new Point(388, 161);
             cboState.Name = "cboState";
             cboState.Size = new Size(312, 23);
             cboState.TabIndex = 15;
@@ -187,7 +189,7 @@
             lblState.AutoSize = true;
             lblState.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblState.ForeColor = SystemColors.ControlLightLight;
-            lblState.Location = new Point(393, 70);
+            lblState.Location = new Point(388, 129);
             lblState.Name = "lblState";
             lblState.Size = new Size(70, 29);
             lblState.TabIndex = 13;
@@ -198,7 +200,7 @@
             txtCity.BackColor = Color.FromArgb(17, 17, 17);
             txtCity.BorderStyle = BorderStyle.FixedSingle;
             txtCity.ForeColor = SystemColors.Window;
-            txtCity.Location = new Point(393, 44);
+            txtCity.Location = new Point(388, 103);
             txtCity.Name = "txtCity";
             txtCity.Size = new Size(312, 23);
             txtCity.TabIndex = 12;
@@ -208,7 +210,7 @@
             lblCity.AutoSize = true;
             lblCity.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblCity.ForeColor = SystemColors.ControlLightLight;
-            lblCity.Location = new Point(393, 12);
+            lblCity.Location = new Point(388, 70);
             lblCity.Name = "lblCity";
             lblCity.Size = new Size(71, 29);
             lblCity.TabIndex = 11;
@@ -219,7 +221,7 @@
             txtDistrict.BackColor = Color.FromArgb(17, 17, 17);
             txtDistrict.BorderStyle = BorderStyle.FixedSingle;
             txtDistrict.ForeColor = SystemColors.Window;
-            txtDistrict.Location = new Point(16, 276);
+            txtDistrict.Location = new Point(388, 44);
             txtDistrict.Name = "txtDistrict";
             txtDistrict.Size = new Size(312, 23);
             txtDistrict.TabIndex = 10;
@@ -229,7 +231,7 @@
             lblDistrict.AutoSize = true;
             lblDistrict.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblDistrict.ForeColor = SystemColors.ControlLightLight;
-            lblDistrict.Location = new Point(16, 244);
+            lblDistrict.Location = new Point(388, 12);
             lblDistrict.Name = "lblDistrict";
             lblDistrict.Size = new Size(67, 29);
             lblDistrict.TabIndex = 9;
@@ -240,7 +242,7 @@
             txtComplement.BackColor = Color.FromArgb(17, 17, 17);
             txtComplement.BorderStyle = BorderStyle.FixedSingle;
             txtComplement.ForeColor = SystemColors.Window;
-            txtComplement.Location = new Point(16, 218);
+            txtComplement.Location = new Point(19, 276);
             txtComplement.Name = "txtComplement";
             txtComplement.Size = new Size(312, 23);
             txtComplement.TabIndex = 8;
@@ -250,7 +252,7 @@
             lblComplement.AutoSize = true;
             lblComplement.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblComplement.ForeColor = SystemColors.ControlLightLight;
-            lblComplement.Location = new Point(15, 186);
+            lblComplement.Location = new Point(18, 244);
             lblComplement.Name = "lblComplement";
             lblComplement.Size = new Size(121, 29);
             lblComplement.TabIndex = 7;
@@ -261,7 +263,7 @@
             txtNumber.BackColor = Color.FromArgb(17, 17, 17);
             txtNumber.BorderStyle = BorderStyle.FixedSingle;
             txtNumber.ForeColor = SystemColors.Window;
-            txtNumber.Location = new Point(16, 160);
+            txtNumber.Location = new Point(19, 218);
             txtNumber.Name = "txtNumber";
             txtNumber.Size = new Size(312, 23);
             txtNumber.TabIndex = 6;
@@ -271,7 +273,7 @@
             lblNumber.AutoSize = true;
             lblNumber.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblNumber.ForeColor = SystemColors.ControlLightLight;
-            lblNumber.Location = new Point(14, 128);
+            lblNumber.Location = new Point(19, 186);
             lblNumber.Name = "lblNumber";
             lblNumber.Size = new Size(79, 29);
             lblNumber.TabIndex = 5;
@@ -282,7 +284,7 @@
             txtStreet.BackColor = Color.FromArgb(17, 17, 17);
             txtStreet.BorderStyle = BorderStyle.FixedSingle;
             txtStreet.ForeColor = SystemColors.Window;
-            txtStreet.Location = new Point(16, 102);
+            txtStreet.Location = new Point(19, 160);
             txtStreet.Name = "txtStreet";
             txtStreet.Size = new Size(312, 23);
             txtStreet.TabIndex = 4;
@@ -292,7 +294,7 @@
             lblStreet.AutoSize = true;
             lblStreet.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblStreet.ForeColor = SystemColors.ControlLightLight;
-            lblStreet.Location = new Point(15, 70);
+            lblStreet.Location = new Point(19, 129);
             lblStreet.Name = "lblStreet";
             lblStreet.Size = new Size(48, 29);
             lblStreet.TabIndex = 3;
@@ -303,7 +305,7 @@
             txtType.BackColor = Color.FromArgb(17, 17, 17);
             txtType.BorderStyle = BorderStyle.FixedSingle;
             txtType.ForeColor = SystemColors.Window;
-            txtType.Location = new Point(16, 44);
+            txtType.Location = new Point(18, 103);
             txtType.Name = "txtType";
             txtType.Size = new Size(312, 23);
             txtType.TabIndex = 2;
@@ -313,7 +315,7 @@
             lblType.AutoSize = true;
             lblType.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
             lblType.ForeColor = SystemColors.ControlLightLight;
-            lblType.Location = new Point(14, 12);
+            lblType.Location = new Point(18, 70);
             lblType.Name = "lblType";
             lblType.Size = new Size(49, 29);
             lblType.TabIndex = 1;
@@ -369,10 +371,10 @@
         private ComboBox cboState;
         private TextBox txtNote;
         private Label lblNote;
-        private TextBox txtZipCode;
         private Label lblZipCode;
         private Button btnClose;
         private Button btnRegister;
         private Button btnDelete;
+        private MaskedTextBox mskCep;
     }
 }

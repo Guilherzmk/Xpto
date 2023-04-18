@@ -33,6 +33,7 @@
             btnCustomerRegister = new Button();
             btnCustomerSearch = new Button();
             lblXpto = new Label();
+            lblMsg = new Label();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -88,12 +89,23 @@
             lblXpto.TabIndex = 1;
             lblXpto.Text = "Xpto";
             // 
+            // lblMsg
+            // 
+            lblMsg.AutoSize = true;
+            lblMsg.ForeColor = SystemColors.Control;
+            lblMsg.Location = new Point(226, 46);
+            lblMsg.Name = "lblMsg";
+            lblMsg.Size = new Size(28, 14);
+            lblMsg.TabIndex = 2;
+            lblMsg.Text = "msg";
+            // 
             // frmApp
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(51, 51, 51);
             ClientSize = new Size(1172, 661);
+            Controls.Add(lblMsg);
             Controls.Add(lblXpto);
             Controls.Add(panel1);
             Font = new Font("Constantia", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -113,5 +125,6 @@
         private Button btnCustomerSearch;
         private Button btnCustomerRegister;
         private Label lblXpto;
+        private Label lblMsg;
     }
 }

@@ -11,7 +11,7 @@ public interface ICustomerRepository
 
     Customer Update(Customer customer);
 
-    int Delete(int code);
+    void Delete(Guid id);
 
     Customer Get(Guid id);
 

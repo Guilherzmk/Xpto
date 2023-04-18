@@ -7,6 +7,9 @@ using Xpto.Core.Shared.Entities.Phone;
 using Xpto.Services.Customers;
 using Xpto.UI.Shared.Entities;
 using Xpto.Core.Shared.Types;
+using Xpto.UI.Delegates;
+using Xpto.Core.Shared.Results;
+using Xpto.Core.Shared.Params;
 
 namespace Xpto.UI.Customers
 {
@@ -15,7 +18,10 @@ namespace Xpto.UI.Customers
 
         private readonly ICustomerService _customerService;
 
-        private Customer Customer = new Customer();
+        public event CustomerChangeDelegate Change;
+        public event CustomerMensageDelegate Sucess;
+
+        private Customer Customer = new();
 
         public bool Confirm { get; set; }
 
@@ -35,7 +41,7 @@ namespace Xpto.UI.Customers
             this.Customer = customer;
             this.txtName.Text = customer.Name;
             this.txtNickname.Text = customer.Nickname;
-            this.txtIdentity.Text = customer.Identity;
+            this.mskIdentity.Text = customer.Identity;
             this.txtNote.Text = customer.Note;
             this.dtpBirthDate.Text = customer.BirthDate?.ToString("dd/MM/yyyy");
             this.cboPersonType.Text = customer.PersonType;
@@ -75,14 +81,33 @@ namespace Xpto.UI.Customers
                     Nickname = this.txtNickname.Text,
                     BirthDate = this.dtpBirthDate.Value,
                     PersonType = this.cboPersonType.Text,
-                    Identity = this.txtIdentity.Text,
+                    Identity = this.mskIdentity.Text,
                     Note = this.txtNote.Text,
-                    Addresses = Customer.Addresses,
-                    Phones = Customer.Phones,
-                    Emails = Customer.Emails,
+                    Addresses = new List<AddressParams>(),
+                    Phones = new List<PhoneParams>(),
+                    Emails = new List<EmailParams>()
                 };
 
+                Customer.Addresses ??= new List<Address>();
+                foreach (var item in Customer.Addresses)
+                {
+                    customerParams.Addresses.Add(item.ToParams());
+                }
+
+                Customer.Phones ??= new List<Phone>();
+                foreach (var item in Customer.Phones)
+                {
+                    customerParams.Phones.Add(item.ToParams());
+                }
+
+                Customer.Emails ??= new List<Email>();
+                foreach (var item in Customer.Emails)
+                {
+                    customerParams.Emails.Add(item.ToParams());
+                }
+
                 var result = this._customerService.Create(customerParams);
+                this.Change.Invoke(Customer);
                 if (this._customerService.Messages.Count > 0)
                 {
                     var sb = new StringBuilder();
@@ -96,6 +121,7 @@ namespace Xpto.UI.Customers
                 else
                 {
                     this.Customer = result;
+                   
                     MessageBox.Show("Cliente cadastrado com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -119,18 +145,42 @@ namespace Xpto.UI.Customers
                 {
                     Name = this.txtName.Text,
                     Nickname = this.txtNickname.Text,
-                    Identity = this.txtIdentity.Text,
+                    Identity = this.mskIdentity.Text,
                     Note = this.txtNote.Text,
                     BirthDate = this.dtpBirthDate.Value,
                     PersonType = this.cboPersonType.Text,
-                    Addresses = Customer.Addresses,
-                    Emails = Customer.Emails,
-                    Phones = Customer.Phones,
+                    Addresses = new List<AddressParams>(),
+                    Phones = new List<PhoneParams>(),
+                    Emails = new List<EmailParams>()
                 };
+
+                Customer.Addresses ??= new List<Address>();
+                foreach (var item in Customer.Addresses)
+                {
+                    customerParams.Addresses.Add(item.ToParams());
+                }
+
+                Customer.Phones ??= new List<Phone>();
+                foreach (var item in Customer.Phones)
+                {
+                    customerParams.Phones.Add(item.ToParams());
+                }
+
+                Customer.Emails ??= new List<Email>();
+                foreach (var item in Customer.Emails)
+                {
+                    customerParams.Emails.Add(item.ToParams());
+                }
 
                 Customer = this._customerService.Update(Customer.Id, customerParams);
 
-                MessageBox.Show("Cliente atualizado com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Change.Invoke(Customer);
+                var msgText = "Cliente atualizado com sucesso!";
+
+                if (this.Sucess != null)
+                    this.Sucess(msgText);
+
+                MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception exception)
@@ -139,15 +189,22 @@ namespace Xpto.UI.Customers
             }
         }
 
+        private void AddAddress(AddressParams addressParams)
+        {
+            var resultService = new ResultService();
+            this.Customer.AddAddress(addressParams, resultService);
+            if (resultService.Messages.Count > 0)
+                MessageBox.Show(resultService.Messages[0]);
+
+            this.LoadAddresses();
+        }
+
         private void btnAddAddress_Click(object sender, EventArgs e)
         {
             var frm = new frmAddressRegister();
-            frm.ShowDialog(this);
+            frm.Confirmed += AddAddress;
+            frm.ShowDialog();
 
-            if (frm.Address != null)
-                this.Customer.Addresses.Add(frm.Address);
-
-            this.LoadAddresses();
         }
 
         public void LoadAddresses()
@@ -155,7 +212,7 @@ namespace Xpto.UI.Customers
             this.Customer.Addresses ??= new List<Address>();
             lvwAddress.View = View.Details;
             lvwAddress.Columns.Clear();
-            lvwAddress.Items.Clear(); 
+            lvwAddress.Items.Clear();
 
             lvwAddress.Columns.Add("Tipo");
             lvwAddress.Columns.Add("Rua");
@@ -187,7 +244,6 @@ namespace Xpto.UI.Customers
 
         private void lvwAddress_DoubleClick(object sender, EventArgs e)
         {
-
             var id = Guid.Parse(lvwAddress.SelectedItems[0].Tag.ToString());
 
             Address address = null;
@@ -209,7 +265,7 @@ namespace Xpto.UI.Customers
 
             if (frm.Action == ActionType.Create)
             {
-                if (frm.Address != null)
+                if (frm._address != null)
                 {
                     for (int i = 0; i <= Customer.Addresses.Count - 1; i++)
                     {
@@ -217,7 +273,7 @@ namespace Xpto.UI.Customers
 
                         if (item.Id == id)
                         {
-                            Customer.Addresses[i] = frm.Address;
+                            Customer.Addresses[i] = (new Address(frm._address));
                             break;
                         }
                     }
@@ -225,7 +281,7 @@ namespace Xpto.UI.Customers
             }
             else if (frm.Action == ActionType.Delete)
             {
-                if (frm.Address != null)
+                if (frm._address != null)
                 {
                     for (int i = 0; i <= Customer.Addresses.Count - 1; i++)
                     {
@@ -242,15 +298,21 @@ namespace Xpto.UI.Customers
             LoadAddresses();
         }
 
+        private void AddPhone(PhoneParams phoneParams)
+        {
+            var resultService = new ResultService();
+            this.Customer.AddPhone(phoneParams, resultService);
+            if (resultService.Messages.Count > 0)
+                MessageBox.Show(resultService.Messages[0]);
+
+            this.LoadPhones();
+        }
+
         private void btnAddPhone_Click(object sender, EventArgs e)
         {
             var frm = new frmPhoneRegister();
-            frm.ShowDialog(this);
-
-            if (frm.Phone != null)
-                this.Customer.Phones.Add(frm.Phone);
-
-            this.LoadPhones();
+            frm.Confirmed += AddPhone;
+            frm.ShowDialog();
         }
 
         public void LoadPhones()
@@ -276,7 +338,6 @@ namespace Xpto.UI.Customers
 
                 item.Tag = phone.Id;
             }
-
         }
 
         private void lvwPhone_DoubleClick(object sender, EventArgs e)
@@ -300,7 +361,6 @@ namespace Xpto.UI.Customers
             frm.LoadPhone(phone);
             frm.ShowDialog(this);
 
-
             if (frm.Action == ActionType.Create)
             {
                 for (int i = 0; i <= Customer.Phones.Count - 1; i++)
@@ -309,7 +369,7 @@ namespace Xpto.UI.Customers
 
                     if (item.Id == id)
                     {
-                        Customer.Phones[i] = frm.Phone;
+                        Customer.Phones[i] = (new Phone(frm._phone));
                         break;
                     }
                 }
@@ -330,14 +390,24 @@ namespace Xpto.UI.Customers
             LoadPhones();
         }
 
+        private void AddEmail(EmailParams emailParams)
+        {
+            var resultService = new ResultService();
+            this.Customer.AddEmail(emailParams, resultService);
+            if (resultService.Messages.Count > 0)
+                MessageBox.Show(resultService.Messages[0]);
+
+            this.LoadEmails();
+
+        }
+
         private void btnAddEmail_Click(object sender, EventArgs e)
         {
             var frm = new frmEmailRegister();
+            frm.Confirmed += AddEmail;
             frm.ShowDialog(this);
 
-            if (frm.Email != null)
-                this.Customer.Emails.Add(frm.Email);
-            this.LoadEmails();
+
         }
 
         public void LoadEmails()
@@ -393,7 +463,7 @@ namespace Xpto.UI.Customers
 
                     if (item.Id == id)
                     {
-                        Customer.Emails[i] = frm.Email;
+                        Customer.Emails[i] = (new Email(frm._email));
                         break;
                     }
                 }
@@ -426,7 +496,8 @@ namespace Xpto.UI.Customers
                 var msgText = MessageBox.Show("Excluir Cliente?", "Cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (msgText != DialogResult.Yes) { return; }
 
-                this._customerService.Delete(Customer.Code);
+                this._customerService.Delete(Customer.Id);
+                this.Change.Invoke(Customer);
 
                 this.Close();
                 MessageBox.Show("Cliente excluído com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -436,6 +507,18 @@ namespace Xpto.UI.Customers
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void cboPersonType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboPersonType.Text == "PF")
+            {
+                mskIdentity.Mask = "000.000.000-00";
+            }
+            else if (cboPersonType.Text == "PJ")
+            {
+                mskIdentity.Mask = "00.000.000/0001-00";
+            }
         }
     }
 }

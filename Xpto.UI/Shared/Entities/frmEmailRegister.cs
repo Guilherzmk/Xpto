@@ -12,18 +12,19 @@ using System.Windows.Forms;
 using Xpto.Core.Customers;
 using Xpto.Core.Shared.Entities.Address;
 using Xpto.Core.Shared.Entities.Email;
+using Xpto.Core.Shared.Params;
 using Xpto.Core.Shared.Types;
 using Xpto.UI.Customers;
+using Xpto.UI.Delegates;
 
 namespace Xpto.UI.Shared.Entities
 {
     public partial class frmEmailRegister : Form
     {
-        private Email _email;
+        public EmailParams _email;
+        public event EmailConfirmDelegate Confirmed;
         private Guid _id;
         public ActionType Action = ActionType.None;
-
-        public Email Email => _email;
 
         public frmEmailRegister()
         {
@@ -38,14 +39,18 @@ namespace Xpto.UI.Shared.Entities
         private void btnRegister_Click(object sender, EventArgs e)
         {
             Action = ActionType.Create;
-            this._email = new Email()
-            {
-                Type = txtType.Text,
-                Address = txtAddress.Text,
-                Note = txtNote.Text,
-            };
+            this._email = new EmailParams();
+
+            _email.Type = txtType.Text;
+            _email.Address = txtAddress.Text;
+            _email.Note = txtNote.Text;
+           
             if (this._id != Guid.Empty)
                 this._email.Id = this._id;
+
+            if (this.Confirmed is not null)
+                this.Confirmed(_email);
+
             this.Close();
         }
 
@@ -53,7 +58,7 @@ namespace Xpto.UI.Shared.Entities
         {
             Action = ActionType.Delete;
 
-            _email = new Email();
+            _email = new EmailParams();
 
             if (_email.Id == Guid.Empty)
             {

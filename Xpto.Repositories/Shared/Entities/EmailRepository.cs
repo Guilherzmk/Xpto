@@ -22,7 +22,7 @@ namespace Xpto.Repositories.Shared.Entities
             _connectionProvider = connectionProvider;
         }
 
-        public Email Insert(Email email)
+        public Email Insert(int customerCode, Email email)
         {
             var commandText = new StringBuilder()
             .AppendLine("INSERT INTO [tb_customer_email]")
@@ -40,70 +40,24 @@ namespace Xpto.Repositories.Shared.Entities
             .AppendLine("@type,")
             .AppendLine("@address,")
             .AppendLine("@note")
-            .AppendLine(" )")
-            .AppendLine(" SET @code = SCOPE_IDENTITY(); ");
-
+            .AppendLine(" )");
+      
             using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
 
             connection.Open();
 
             var cm = connection.CreateCommand();
+
             cm.CommandText = commandText.ToString();
 
-            var code = cm.Parameters.Add(new SqlParameter("@code", email.Code) { Direction = ParameterDirection.Output });
-
-            this.SetEmailParameters(cm, email);
+            this.SetEmailParameters(customerCode, email, cm);
 
             cm.ExecuteNonQuery();
-
-            email.Code = (int)code.Value;
 
             return email;
         }
 
-        public IList<Email> InsertMany(IList<Email> emails)
-        {
-            var commandText = new StringBuilder()
-            .AppendLine("INSERT INTO [tb_customer_email]")
-            .AppendLine(" (")
-            .AppendLine("[id],")
-            .AppendLine("[customer_code],")
-            .AppendLine("[type],")
-            .AppendLine("[address],")
-            .AppendLine("[note]")
-            .AppendLine(" )")
-            .AppendLine(" VALUES")
-            .AppendLine(" (")
-            .AppendLine("@id,")
-            .AppendLine("@customer_code,")
-            .AppendLine("@type,")
-            .AppendLine("@address,")
-            .AppendLine("@note")
-            .AppendLine(" )")
-            .AppendLine(" SET @code = SCOPE_IDENTITY(); ");
-
-            using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-
-            connection.Open();
-
-            foreach (var email in emails)
-            {
-                var cm = connection.CreateCommand();
-                cm.CommandText = commandText.ToString();
-
-                var code = cm.Parameters.Add(new SqlParameter("@code", email.Code) { Direction = ParameterDirection.Output });
-
-                this.SetEmailParameters(cm, email);
-
-                cm.ExecuteNonQuery();
-
-                email.Code = (int)code.Value;
-            }
-
-            return emails;
-        }
-
-        public void Update(Email email)
+        public void Update(int customerCode, Email email)
         {
             var commandText = new StringBuilder()
                 .AppendLine(" UPDATE [tb_customer_email]")
@@ -123,7 +77,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             cm.CommandText = commandText.ToString();
 
-            this.SetEmailParameters(cm, email);
+            this.SetEmailParameters(customerCode, email, cm);
 
             cm.ExecuteNonQuery();
 
@@ -151,32 +105,25 @@ namespace Xpto.Repositories.Shared.Entities
             return result;
         }
 
-        public IList<Email> DeleteMany(IList<Email> emails)
+        public int DeleteByCustomer(int customerCode)
         {
             var commandText = new StringBuilder()
-            .AppendLine(" DELETE FROM [tb_customer_email]")
-            .AppendLine(" WHERE [customer_code] = @customer_code");
+                .AppendLine(" DELETE FROM [tb_customer_email]")
+                .AppendLine(" WHERE [customer_code] = @customer_code");
 
-            using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-
+            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
+            var cm = connection.CreateCommand();
 
-            foreach(var email in emails)
-            {
-                var cm = connection.CreateCommand();
-                cm.CommandText = commandText.ToString();
+            cm.CommandText = commandText.ToString();
 
-                cm.Parameters.Add(new SqlParameter("@customer_code", emails));
+            cm.Parameters.Add(new SqlParameter("@customer_code", customerCode));
 
-                var result = cm.ExecuteNonQuery();
-            }
+            var result = cm.ExecuteNonQuery();
 
             connection.Close();
 
-            return emails;
-
-
-
+            return result;
         }
 
         public Email Get(int code)
@@ -260,10 +207,10 @@ namespace Xpto.Repositories.Shared.Entities
             return l;
         }
 
-        private void SetEmailParameters(SqlCommand cm, Email email)
+        private void SetEmailParameters(int customerCode, Email email, SqlCommand cm)
         {
             cm.Parameters.Add(new SqlParameter("@id", email.Id.GetDbValue()));
-            cm.Parameters.Add(new SqlParameter("@customer_code", email.CustomerCode.GetDbValue()));
+            cm.Parameters.Add(new SqlParameter("@customer_code", customerCode.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@type", email.Type.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@address", email.Address.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@note", email.Note.GetDbValue()));

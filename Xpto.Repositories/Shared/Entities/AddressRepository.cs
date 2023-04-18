@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Xpto.Core.Customers;
@@ -24,9 +26,8 @@ namespace Xpto.Repositories.Shared.Entities
             _connectionProvider = connectionProvider;
         }
 
-        public IList<Address> Insert(Address address)
+        public Address Insert(int customerCode, Address address)
         {
-            var result = new List<Address>();
             var commandText = new StringBuilder()
             .AppendLine("INSERT INTO [tb_customer_address]")
             .AppendLine(" (")
@@ -55,87 +56,28 @@ namespace Xpto.Repositories.Shared.Entities
             .AppendLine("@state,")
             .AppendLine("@zip_code,")
             .AppendLine("@note")
-            .AppendLine(" )")
-            .AppendLine(" SET @code = SCOPE_IDENTITY(); ");
-
+            .AppendLine(" )");
+          
             using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
 
             connection.Open();
 
             var cm = connection.CreateCommand();
+
             cm.CommandText = commandText.ToString();
 
-            var code = cm.Parameters.Add(new SqlParameter("@code", address.Code) { Direction = ParameterDirection.Output });
-
-            this.SetAddressParameters(cm, address);
+            this.SetAddressParameters(customerCode, address, cm);
 
             cm.ExecuteNonQuery();
 
-            address.Code = (int)code.Value;
-
-            result.Add(address);
-
-            return result;
+            return address;
         }
 
-        public IList<Address> InsertMany(IList<Address> addresses)
+        
+        public void Update(int customerCode, Address address)
         {
             var commandText = new StringBuilder()
-           .AppendLine("INSERT INTO [tb_customer_address]")
-           .AppendLine(" (")
-           .AppendLine("[id],")
-           .AppendLine("[customer_code],")
-           .AppendLine("[type],")
-           .AppendLine("[street],")
-           .AppendLine("[number],")
-           .AppendLine("[complement],")
-           .AppendLine("[district],")
-           .AppendLine("[city],")
-           .AppendLine("[state],")
-           .AppendLine("[zip_code],")
-           .AppendLine("[note]")
-           .AppendLine(" )")
-             .AppendLine(" VALUES")
-            .AppendLine(" (")
-            .AppendLine("@id,")
-            .AppendLine("@customer_code,")
-            .AppendLine("@type,")
-            .AppendLine("@street,")
-            .AppendLine("@number,")
-            .AppendLine("@complement,")
-            .AppendLine("@district,")
-            .AppendLine("@city,")
-            .AppendLine("@state,")
-            .AppendLine("@zip_code,")
-            .AppendLine("@note")
-            .AppendLine(" )")
-            .AppendLine(" SET @code = SCOPE_IDENTITY(); ");
-
-            using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-
-            connection.Open();
-
-            foreach (var address in addresses)
-            {
-                var cm = connection.CreateCommand();
-                cm.CommandText = commandText.ToString();
-
-                var code = cm.Parameters.Add(new SqlParameter("@code", address.Code) { Direction = ParameterDirection.Output });
-
-                this.SetAddressParameters(cm, address);
-
-                cm.ExecuteNonQuery();
-
-                address.Code = (int)code.Value;
-            }
-
-            return addresses;
-        }
-
-        public void Update(Address address)
-        {
-            var commandText = new StringBuilder()
-                .AppendLine(" UPDATE [tb_customer]")
+                .AppendLine(" UPDATE [tb_customer_address]")
                 .AppendLine(" SET")
                 .AppendLine("[id] = @id,")
                 .AppendLine("[customer_code] = @customer_code,")
@@ -146,7 +88,8 @@ namespace Xpto.Repositories.Shared.Entities
                 .AppendLine("[city] = @city,")
                 .AppendLine("[state] = @state,")
                 .AppendLine("[zip_code] = @zip_code,")
-                .AppendLine("[note] = @note,");
+                .AppendLine("[note] = @note")
+                .AppendLine("WHERE [id] = @id");
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -155,25 +98,24 @@ namespace Xpto.Repositories.Shared.Entities
 
             cm.CommandText = commandText.ToString();
 
-            this.SetAddressParameters(cm, address);
+            this.SetAddressParameters(customerCode, address, cm);
 
             cm.ExecuteNonQuery();
 
             connection.Close();
         }
-
-        public int Delete(int code)
+        public int Delete(Guid id)
         {
             var commandText = new StringBuilder()
             .AppendLine(" DELETE FROM [tb_customer_address]")
-            .AppendLine(" WHERE [customer_code] = @customer_code");
+            .AppendLine(" WHERE [id] = @id");
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
             var cm = connection.CreateCommand();
             cm.CommandText = commandText.ToString();
 
-            cm.Parameters.Add(new SqlParameter("@customer_code", code));
+            cm.Parameters.Add(new SqlParameter("@id", id));
 
             var result = cm.ExecuteNonQuery();
 
@@ -182,37 +124,12 @@ namespace Xpto.Repositories.Shared.Entities
             return result;
         }
 
-        public IList<Address> DeleteMany(IList<Address> addresses)
+       
+        public int DeleteByCustomer(int customerCode)
         {
             var commandText = new StringBuilder()
-            .AppendLine(" DELETE FROM [tb_customer_address]")
-            .AppendLine(" WHERE [customer_code] = @customer_code");
-
-            using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-
-            connection.Open();
-
-            foreach(var address in addresses)
-            {
-                var cm = connection.CreateCommand();
-                cm.CommandText = commandText.ToString();
-
-                cm.Parameters.Add(new SqlParameter("@customer_code", addresses));
-
-                var result = cm.ExecuteNonQuery();
-            }
-
-            connection.Close();
-
-            return addresses;
-
-
-        }
-
-        public Address Get(int code)
-        {
-            var commandText = this.GetSelectQuery()
-                   .AppendLine(" WHERE [code] = @code");
+                .AppendLine(" DELETE FROM [tb_customer_address]")
+                .AppendLine(" WHERE [customer_code] = @customer_code");
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -220,7 +137,27 @@ namespace Xpto.Repositories.Shared.Entities
 
             cm.CommandText = commandText.ToString();
 
-            cm.Parameters.Add(new SqlParameter("@code", code));
+            cm.Parameters.Add(new SqlParameter("@customer_code", customerCode));
+
+            var result = cm.ExecuteNonQuery();
+
+            connection.Close();
+
+            return result;
+        }
+
+        public Address Get(Guid id)
+        {
+            var commandText = this.GetSelectQuery()
+                   .AppendLine(" WHERE [id] = @id");
+
+            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
+            connection.Open();
+            var cm = connection.CreateCommand();
+
+            cm.CommandText = commandText.ToString();
+
+            cm.Parameters.Add(new SqlParameter("@id", id));
 
             var dataReader = cm.ExecuteReader();
 
@@ -234,31 +171,6 @@ namespace Xpto.Repositories.Shared.Entities
             connection.Close();
 
             return address;
-        }
-
-        public IList<Address> Find()
-        {
-            var l = new List<Address>();
-
-            var commandText = this.GetSelectQuery();
-
-            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-            connection.Open();
-
-            var cm = connection.CreateCommand();
-
-            cm.CommandText = commandText.ToString();
-
-            var dataReader = cm.ExecuteReader();
-
-            while (dataReader.Read())
-            {
-                var address = LoadDataReader(dataReader);
-
-                l.Add(address);
-            }
-
-            return l;
         }
 
         public IList<Address> Find(int customerCode)
@@ -334,11 +246,10 @@ namespace Xpto.Repositories.Shared.Entities
             return sb;
         }
 
-        private void SetAddressParameters(SqlCommand cm, Address address)
+        private void SetAddressParameters(int customerCode, Address address, SqlCommand cm)
         {
             cm.Parameters.Add(new SqlParameter("@id", address.Id.GetDbValue()));
-            cm.Parameters.Add(new SqlParameter("@adresscode", address.Code.GetDbValue()));
-            cm.Parameters.Add(new SqlParameter("@customer_code", address.CustomerCode.GetDbValue()));
+            cm.Parameters.Add(new SqlParameter("@customer_code", customerCode.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@type", address.Type.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@street", address.Street.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@number", address.Number.GetDbValue()));
@@ -352,20 +263,19 @@ namespace Xpto.Repositories.Shared.Entities
 
         public static Address LoadDataReader(SqlDataReader dataReader)
         {
-            var address = new Address();
-
-            address.Id = dataReader.GetGuid("id");
-            address.CustomerCode = dataReader.GetInt32("customer_code");
-            address.Type = dataReader.GetString("type");
-            address.Street = dataReader.GetString("street");
-            address.Number = dataReader.GetString("number");
-            address.Complement = dataReader.GetString("complement");
-            address.District = dataReader.GetString("district");
-            address.City = dataReader.GetString("city");
-            address.State = dataReader.GetString("state");
-            address.ZipCode = dataReader.GetString("zip_code");
-            address.Note = dataReader.GetString("note");
-
+            var address = new Address
+            {
+                Id = dataReader.GetGuid("id"),
+                Type = dataReader.GetString("type"),
+                Street = dataReader.GetString("street"),
+                Number = dataReader.GetString("number"),
+                Complement = dataReader.GetString("complement"),
+                District = dataReader.GetString("district"),
+                City = dataReader.GetString("city"),
+                State = dataReader.GetString("state"),
+                ZipCode = dataReader.GetString("zip_code"),
+                Note = dataReader.GetString("note")
+            };
             return address;
         }
 

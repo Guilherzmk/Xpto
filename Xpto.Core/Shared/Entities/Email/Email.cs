@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xpto.Core.Shared.Params;
 
 namespace Xpto.Core.Shared.Entities.Email
 {
@@ -18,6 +19,31 @@ namespace Xpto.Core.Shared.Entities.Email
         public Email()
         {
             Id = Guid.NewGuid();
+        }
+
+        public Email(EmailParams emailParams)
+        {
+            this.Id = Guid.NewGuid();
+
+            if (emailParams.Id != null)
+                this.Id = (Guid)emailParams.Id;
+
+            this.Type = emailParams.Type;
+            this.Address = emailParams.Address;
+            this.Note = emailParams.Note;
+        }
+
+        public EmailParams ToParams()
+        {
+            var email = new EmailParams
+            {
+                Id = this.Id,
+                Type = this.Type,
+                Address = this.Address,
+                Note = this.Note
+            };
+
+            return email;
         }
 
         public override string ToString()

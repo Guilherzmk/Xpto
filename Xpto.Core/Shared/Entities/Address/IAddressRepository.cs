@@ -9,13 +9,11 @@ namespace Xpto.Core.Shared.Entities.Address
 {
     public interface IAddressRepository
     {
-        IList<Address> Insert(Address address);
-        IList<Address> InsertMany(IList<Address> addresses);
-        void Update(Address address);
-        int Delete(int code);
-        IList<Address> DeleteMany(IList<Address> addresses);
-        Address Get(int code);
-        IList<Address> Find();
+        Address Insert(int customerCode, Address address);
+        void Update(int customerCode, Address address);
+        int Delete(Guid id);
+        int DeleteByCustomer(int customerCode);
+        Address Get(Guid id);
         IList<Address> Find(int customerCode);
         DataTable LoadDataTable();
 

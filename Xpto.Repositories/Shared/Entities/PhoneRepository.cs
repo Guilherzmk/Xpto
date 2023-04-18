@@ -21,7 +21,7 @@ namespace Xpto.Repositories.Shared.Entities
             _connectionProvider = connectionProvider;
         }
 
-        public Phone Insert(Phone phone)
+        public Phone Insert(int customerCode, Phone phone)
         {
             var commandText = new StringBuilder()
             .AppendLine("INSERT INTO [tb_customer_phone]")
@@ -41,71 +41,24 @@ namespace Xpto.Repositories.Shared.Entities
             .AppendLine("@ddd,")
             .AppendLine("@number,")
             .AppendLine("@note")
-            .AppendLine(" )")
-            .AppendLine(" SET @code = SCOPE_IDENTITY(); ");
+            .AppendLine(" )");
 
             using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
 
             connection.Open();
 
             var cm = connection.CreateCommand();
+
             cm.CommandText = commandText.ToString();
 
-            var code = cm.Parameters.Add(new SqlParameter("@code", phone.Code) { Direction = ParameterDirection.Output });
-
-            this.SetPhoneParameters(cm, phone);
+            this.SetPhoneParameters(customerCode, phone, cm);
 
             cm.ExecuteNonQuery();
-
-            phone.Code = (int)code.Value;
 
             return phone;
         }
 
-        public IList<Phone> InsertMany(IList<Phone> phones)
-        {
-            var commandText = new StringBuilder()
-            .AppendLine("INSERT INTO [tb_customer_phone]")
-            .AppendLine(" (")
-            .AppendLine("[id],")
-            .AppendLine("[customer_code],")
-            .AppendLine("[type],")
-            .AppendLine("[ddd],")
-            .AppendLine("[number],")
-            .AppendLine("[note]")
-            .AppendLine(" )")
-            .AppendLine(" VALUES")
-            .AppendLine(" (")
-            .AppendLine("@id,")
-            .AppendLine("@customer_code,")
-            .AppendLine("@type,")
-            .AppendLine("@ddd,")
-            .AppendLine("@number,")
-            .AppendLine("@note")
-            .AppendLine(" )")
-            .AppendLine(" SET @code = SCOPE_IDENTITY(); ");
-
-            using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-
-            connection.Open();
-
-            foreach (var phone in phones)
-            {
-                var cm = connection.CreateCommand();
-                cm.CommandText = commandText.ToString();
-
-                var code = cm.Parameters.Add(new SqlParameter("@code", phone.Code) { Direction = ParameterDirection.Output });
-
-                this.SetPhoneParameters(cm, phone);
-
-                cm.ExecuteNonQuery();
-
-                phone.Code = (int)code.Value;
-            }
-
-            return phones;
-        }
-        public void Update(Phone phone)
+        public void Update(int customerCode, Phone phone)
         {
             var commandText = new StringBuilder()
                 .AppendLine(" UPDATE [tb_customer]")
@@ -125,7 +78,7 @@ namespace Xpto.Repositories.Shared.Entities
 
             cm.CommandText = commandText.ToString();
 
-            this.SetPhoneParameters(cm, phone);
+            this.SetPhoneParameters(customerCode, phone, cm);
 
             cm.ExecuteNonQuery();
 
@@ -153,31 +106,25 @@ namespace Xpto.Repositories.Shared.Entities
             return result;
         }
 
-        public  IList<Phone> DeleteMany(IList<Phone> phones)
+       public int DeleteByCustomer(int customerCode)
         {
             var commandText = new StringBuilder()
-            .AppendLine(" DELETE FROM [tb_customer_phone]")
-            .AppendLine(" WHERE [customer_code] = @customer_code");
+               .AppendLine(" DELETE FROM [tb_customer_phone]")
+               .AppendLine(" WHERE [customer_code] = @customer_code");
 
-            using var connection = new SqlConnection(this._connectionProvider.ConnectionString);
-
+            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
+            var cm = connection.CreateCommand();
 
-            foreach(var phone in phones)
-            {
-                var cm = connection.CreateCommand();
-                cm.CommandText = commandText.ToString();
+            cm.CommandText = commandText.ToString();
 
-                cm.Parameters.Add(new SqlParameter("@customer_code", phones));
+            cm.Parameters.Add(new SqlParameter("@customer_code", customerCode));
 
-                var result = cm.ExecuteNonQuery();
-            }
+            var result = cm.ExecuteNonQuery();
 
             connection.Close();
 
-            return phones;
-
-
+            return result;
         }
 
         public Phone Get(int code)
@@ -257,10 +204,10 @@ namespace Xpto.Repositories.Shared.Entities
             return l;
         }
 
-        private void SetPhoneParameters(SqlCommand cm, Phone phone)
+        private void SetPhoneParameters(int customerCode, Phone phone, SqlCommand cm)
         {
             cm.Parameters.Add(new SqlParameter("@id", phone.Id.GetDbValue()));
-            cm.Parameters.Add(new SqlParameter("@customer_code", phone.CustomerCode.GetDbValue()));
+            cm.Parameters.Add(new SqlParameter("@customer_code", customerCode.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@type", phone.Type.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@ddd", phone.Ddd.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@number", phone.Number.GetDbValue()));
