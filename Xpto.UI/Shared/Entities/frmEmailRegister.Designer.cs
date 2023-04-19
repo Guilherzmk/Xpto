@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEmailRegister));
             panel1 = new Panel();
+            cboType = new ComboBox();
             btnDelete = new Button();
             btnClose = new Button();
             btnRegister = new Button();
@@ -37,7 +38,6 @@
             lblNote = new Label();
             txtAddress = new TextBox();
             lblAddress = new Label();
-            txtType = new TextBox();
             lblType = new Label();
             lblEmailRegister = new Label();
             panel1.SuspendLayout();
@@ -46,6 +46,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(cboType);
             panel1.Controls.Add(btnDelete);
             panel1.Controls.Add(btnClose);
             panel1.Controls.Add(btnRegister);
@@ -53,12 +54,22 @@
             panel1.Controls.Add(lblNote);
             panel1.Controls.Add(txtAddress);
             panel1.Controls.Add(lblAddress);
-            panel1.Controls.Add(txtType);
             panel1.Controls.Add(lblType);
             panel1.Location = new Point(-2, 70);
             panel1.Name = "panel1";
             panel1.Size = new Size(804, 389);
             panel1.TabIndex = 0;
+            // 
+            // cboType
+            // 
+            cboType.BackColor = Color.FromArgb(17, 17, 17);
+            cboType.ForeColor = SystemColors.Window;
+            cboType.FormattingEnabled = true;
+            cboType.Items.AddRange(new object[] { "Pessoal", "Corporativo" });
+            cboType.Location = new Point(14, 41);
+            cboType.Name = "cboType";
+            cboType.Size = new Size(312, 23);
+            cboType.TabIndex = 24;
             // 
             // btnDelete
             // 
@@ -147,16 +158,6 @@
             lblAddress.TabIndex = 4;
             lblAddress.Text = "Endereço de Email:";
             // 
-            // txtType
-            // 
-            txtType.BackColor = Color.FromArgb(17, 17, 17);
-            txtType.BorderStyle = BorderStyle.FixedSingle;
-            txtType.ForeColor = SystemColors.Window;
-            txtType.Location = new Point(14, 41);
-            txtType.Name = "txtType";
-            txtType.Size = new Size(312, 23);
-            txtType.TabIndex = 3;
-            // 
             // lblType
             // 
             lblType.AutoSize = true;
@@ -207,9 +208,9 @@
         private Label lblNote;
         private TextBox txtAddress;
         private Label lblAddress;
-        private TextBox txtType;
         private Button btnRegister;
         private Button btnClose;
         private Button btnDelete;
+        private ComboBox cboType;
     }
 }

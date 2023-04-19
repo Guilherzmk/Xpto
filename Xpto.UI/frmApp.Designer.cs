@@ -30,22 +30,40 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmApp));
             panel1 = new Panel();
+            btnCustomerBin = new Button();
             btnCustomerRegister = new Button();
             btnCustomerSearch = new Button();
             lblXpto = new Label();
-            lblMsg = new Label();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(btnCustomerBin);
             panel1.Controls.Add(btnCustomerRegister);
             panel1.Controls.Add(btnCustomerSearch);
             panel1.Location = new Point(0, 70);
             panel1.Name = "panel1";
             panel1.Size = new Size(2346, 814);
             panel1.TabIndex = 0;
+            // 
+            // btnCustomerBin
+            // 
+            btnCustomerBin.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCustomerBin.BackColor = Color.FromArgb(51, 51, 51);
+            btnCustomerBin.Cursor = Cursors.Hand;
+            btnCustomerBin.FlatStyle = FlatStyle.Flat;
+            btnCustomerBin.Font = new Font("Bahnschrift Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            btnCustomerBin.ForeColor = SystemColors.Control;
+            btnCustomerBin.ImageAlign = ContentAlignment.BottomRight;
+            btnCustomerBin.Location = new Point(11, 158);
+            btnCustomerBin.Name = "btnCustomerBin";
+            btnCustomerBin.Size = new Size(184, 52);
+            btnCustomerBin.TabIndex = 2;
+            btnCustomerBin.Text = "Registros Excluidos";
+            btnCustomerBin.UseVisualStyleBackColor = false;
+            btnCustomerBin.Click += btnCustomerBin_Click;
             // 
             // btnCustomerRegister
             // 
@@ -69,7 +87,7 @@
             btnCustomerSearch.FlatStyle = FlatStyle.Flat;
             btnCustomerSearch.Font = new Font("Bahnschrift Condensed", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             btnCustomerSearch.ForeColor = SystemColors.Control;
-            btnCustomerSearch.Location = new Point(226, 21);
+            btnCustomerSearch.Location = new Point(11, 89);
             btnCustomerSearch.Name = "btnCustomerSearch";
             btnCustomerSearch.Size = new Size(184, 52);
             btnCustomerSearch.TabIndex = 0;
@@ -89,23 +107,12 @@
             lblXpto.TabIndex = 1;
             lblXpto.Text = "Xpto";
             // 
-            // lblMsg
-            // 
-            lblMsg.AutoSize = true;
-            lblMsg.ForeColor = SystemColors.Control;
-            lblMsg.Location = new Point(226, 46);
-            lblMsg.Name = "lblMsg";
-            lblMsg.Size = new Size(28, 14);
-            lblMsg.TabIndex = 2;
-            lblMsg.Text = "msg";
-            // 
             // frmApp
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(51, 51, 51);
             ClientSize = new Size(1172, 661);
-            Controls.Add(lblMsg);
             Controls.Add(lblXpto);
             Controls.Add(panel1);
             Font = new Font("Constantia", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -125,6 +132,6 @@
         private Button btnCustomerSearch;
         private Button btnCustomerRegister;
         private Label lblXpto;
-        private Label lblMsg;
+        private Button btnCustomerBin;
     }
 }

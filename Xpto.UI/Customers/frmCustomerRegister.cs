@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Xpto.Core.Shared.Functions;
 using System.Text;
 using Xpto.Core.Customers;
 using Xpto.Core.Shared.Entities.Address;
@@ -19,7 +20,6 @@ namespace Xpto.UI.Customers
         private readonly ICustomerService _customerService;
 
         public event CustomerChangeDelegate Change;
-        public event CustomerMensageDelegate Sucess;
 
         private Customer Customer = new();
 
@@ -43,7 +43,7 @@ namespace Xpto.UI.Customers
             this.txtNickname.Text = customer.Nickname;
             this.mskIdentity.Text = customer.Identity;
             this.txtNote.Text = customer.Note;
-            this.dtpBirthDate.Text = customer.BirthDate?.ToString("dd/MM/yyyy");
+            this.mskBirthDate.Text = customer.BirthDate?.ToString("dd/MM/yyyy");
             this.cboPersonType.Text = customer.PersonType;
             this.lblCode.Text = $"Código: {customer.Code}";
             LoadAddresses();
@@ -79,9 +79,9 @@ namespace Xpto.UI.Customers
                 var customerParams = new CustomerCreateParams(this.txtName.Text)
                 {
                     Nickname = this.txtNickname.Text,
-                    BirthDate = this.dtpBirthDate.Value,
+                    BirthDate = DateTime.Parse(mskBirthDate.Text),
                     PersonType = this.cboPersonType.Text,
-                    Identity = this.mskIdentity.Text,
+                    Identity = this.mskIdentity.Text.ToString(),
                     Note = this.txtNote.Text,
                     Addresses = new List<AddressParams>(),
                     Phones = new List<PhoneParams>(),
@@ -107,7 +107,7 @@ namespace Xpto.UI.Customers
                 }
 
                 var result = this._customerService.Create(customerParams);
-                this.Change.Invoke(Customer);
+
                 if (this._customerService.Messages.Count > 0)
                 {
                     var sb = new StringBuilder();
@@ -121,7 +121,7 @@ namespace Xpto.UI.Customers
                 else
                 {
                     this.Customer = result;
-                   
+
                     MessageBox.Show("Cliente cadastrado com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -147,7 +147,7 @@ namespace Xpto.UI.Customers
                     Nickname = this.txtNickname.Text,
                     Identity = this.mskIdentity.Text,
                     Note = this.txtNote.Text,
-                    BirthDate = this.dtpBirthDate.Value,
+                    BirthDate = DateTime.Parse(mskBirthDate.Text),
                     PersonType = this.cboPersonType.Text,
                     Addresses = new List<AddressParams>(),
                     Phones = new List<PhoneParams>(),
@@ -177,8 +177,6 @@ namespace Xpto.UI.Customers
                 this.Change.Invoke(Customer);
                 var msgText = "Cliente atualizado com sucesso!";
 
-                if (this.Sucess != null)
-                    this.Sucess(msgText);
 
                 MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -186,6 +184,26 @@ namespace Xpto.UI.Customers
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (Customer.Code == 0)
+            {
+                var msgText = "Não é possível apagar o cliente pois ele não existe";
+                MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                var msgText = MessageBox.Show("Excluir Cliente?", "Cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (msgText != DialogResult.Yes) { return; }
+
+                this._customerService.SoftDelete(Customer.Id);
+                this.Change.Invoke(Customer);
+
+                this.Close();
+                MessageBox.Show("Cliente excluído com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -484,26 +502,6 @@ namespace Xpto.UI.Customers
             LoadEmails();
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            if (Customer.Code == 0)
-            {
-                var msgText = "Não é possível apagar o cliente pois ele não existe";
-                MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else
-            {
-                var msgText = MessageBox.Show("Excluir Cliente?", "Cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (msgText != DialogResult.Yes) { return; }
-
-                this._customerService.Delete(Customer.Id);
-                this.Change.Invoke(Customer);
-
-                this.Close();
-                MessageBox.Show("Cliente excluído com sucesso!", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -513,12 +511,14 @@ namespace Xpto.UI.Customers
         {
             if (cboPersonType.Text == "PF")
             {
-                mskIdentity.Mask = "000.000.000-00";
+                mskIdentity.Mask = "000,000,000-00";
             }
             else if (cboPersonType.Text == "PJ")
             {
-                mskIdentity.Mask = "00.000.000/0001-00";
+                mskIdentity.Mask = "00,000,000/0001-00";
             }
         }
+
+        
     }
 }

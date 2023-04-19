@@ -31,7 +31,7 @@ namespace Xpto.UI.Shared.Entities
             this.Action = ActionType.Create;
             _address = new AddressParams();
 
-            _address.Type = this.txtType.Text;
+            _address.Type = this.cboType.Text;
             _address.Street = this.txtStreet.Text;
             _address.Number = this.txtNumber.Text;
             _address.Complement = this.txtComplement.Text;
@@ -76,15 +76,14 @@ namespace Xpto.UI.Shared.Entities
         public void LoadAddress(Address address)
         {
             this._id = address.Id;
-            this.txtType.Text = address.Type;
+            this.cboType.Text = address.Type;
             this.txtStreet.Text = address.Street;
             this.txtNumber.Text = address.Number;
             this.txtComplement.Text = address.Complement;
             this.txtDistrict.Text = address.District;
             this.txtCity.Text = address.City;
             this.cboState.Text = address.State;
-            var zipCode = this.mskCep.Text.Replace("-", "");
-            zipCode = address.ZipCode;
+            this.mskCep.Text = address.ZipCode;
             this.txtNote.Text = address.Note;
         }
 

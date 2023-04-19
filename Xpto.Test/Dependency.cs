@@ -33,9 +33,7 @@ namespace Xpto.Test
 
             services.AddTransient<IAddressRepository, AddressRepository>();
 
-
             services.AddTransient<IEmailRepository, EmailRepository>();
-
 
             services.AddTransient<IPhoneRepository, PhoneRepository>();
       

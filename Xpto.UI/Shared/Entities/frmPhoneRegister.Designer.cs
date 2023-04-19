@@ -37,15 +37,16 @@
             txtNote = new TextBox();
             lblNote = new Label();
             lblNumber = new Label();
-            txtType = new TextBox();
             lblType = new Label();
             lblPhoneRegister = new Label();
+            cboType = new ComboBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(cboType);
             panel1.Controls.Add(mskNumber);
             panel1.Controls.Add(btnDelete);
             panel1.Controls.Add(btnClose);
@@ -53,7 +54,6 @@
             panel1.Controls.Add(txtNote);
             panel1.Controls.Add(lblNote);
             panel1.Controls.Add(lblNumber);
-            panel1.Controls.Add(txtType);
             panel1.Controls.Add(lblType);
             panel1.Location = new Point(-3, 70);
             panel1.Name = "panel1";
@@ -148,16 +148,6 @@
             lblNumber.TabIndex = 7;
             lblNumber.Text = "Número:";
             // 
-            // txtType
-            // 
-            txtType.BackColor = Color.FromArgb(17, 17, 17);
-            txtType.BorderStyle = BorderStyle.FixedSingle;
-            txtType.ForeColor = SystemColors.Window;
-            txtType.Location = new Point(15, 42);
-            txtType.Name = "txtType";
-            txtType.Size = new Size(312, 23);
-            txtType.TabIndex = 4;
-            // 
             // lblType
             // 
             lblType.AutoSize = true;
@@ -179,6 +169,17 @@
             lblPhoneRegister.Size = new Size(204, 58);
             lblPhoneRegister.TabIndex = 3;
             lblPhoneRegister.Text = "Telefone";
+            // 
+            // cboType
+            // 
+            cboType.BackColor = Color.FromArgb(17, 17, 17);
+            cboType.ForeColor = SystemColors.Window;
+            cboType.FormattingEnabled = true;
+            cboType.Items.AddRange(new object[] { "Fixo", "Celular" });
+            cboType.Location = new Point(15, 42);
+            cboType.Name = "cboType";
+            cboType.Size = new Size(312, 23);
+            cboType.TabIndex = 26;
             // 
             // frmPhoneRegister
             // 
@@ -204,7 +205,6 @@
         private Panel panel1;
         private Label lblPhoneRegister;
         private Label lblType;
-        private TextBox txtType;
         private Label lblNote;
         private Label lblNumber;
         private TextBox txtNote;
@@ -212,5 +212,6 @@
         private Button btnClose;
         private Button btnDelete;
         private MaskedTextBox mskNumber;
+        private ComboBox cboType;
     }
 }

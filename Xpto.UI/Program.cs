@@ -41,6 +41,7 @@ namespace Xpto.UI
                     services.AddTransient<frmApp>();
                     services.AddTransient<frmCustomerRegister>();
                     services.AddTransient<frmCustomerSearch>();
+                    services.AddTransient<frmCustomerBin>();
 
                     services.AddTransient<SqlConnectionProvider>(_ => new SqlConnectionProvider("server=DESKTOP-UJHJIPK\\SQLEXPRESS;database=db_xpto;user=sa;password=123456"));
 

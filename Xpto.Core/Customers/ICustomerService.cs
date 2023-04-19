@@ -12,7 +12,9 @@ public interface ICustomerService : IResultService
     Customer Create(CustomerCreateParams createParams);
     Customer Update(Guid id, CustomerUpdateParams updateParams);
     void Delete(Guid id);
+    void SoftDelete(Guid id);
     Customer Get(Guid id);
     IList<Customer> List();
     DataTable LoadDataTable();
+    DataTable LoadDataTableDisabled();
 }

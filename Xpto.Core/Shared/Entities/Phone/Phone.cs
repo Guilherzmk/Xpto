@@ -50,7 +50,7 @@ namespace Xpto.Core.Shared.Entities.Phone
 
         public override string ToString()
         {
-            return $"({Ddd}) {Number}";
+            return $"({Ddd}){Number}";
         }
     }
 }

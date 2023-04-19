@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 using Xpto.Services.Customers;
 using Microsoft.Extensions.DependencyInjection;
 using Xpto.Core.Customers;
@@ -42,6 +33,7 @@ namespace Xpto.UI.Customers
                     return;
 
                 var frm = Program.ServiceProvider.GetRequiredService<frmCustomerRegister>();
+                frm.btnRegister.Text = "Atualizar";
                 frm.LoadCustomer(customer);
 
                 frm.Change += CustomerChanged;
@@ -85,14 +77,22 @@ namespace Xpto.UI.Customers
         {
             var dt = this._customerService.LoadDataTable();
             this.dgvSearch.DataSource = dt;
+            this.dgvSearch.Columns[0].Visible = false;
+            this.dgvSearch.Columns[8].Visible = false;
+            this.dgvSearch.Columns[9].Visible = false;
+            this.dgvSearch.Columns[10].Visible = false;
+            this.dgvSearch.Columns[11].Visible = false;
+            this.dgvSearch.Columns[12].Visible = false;
+            this.dgvSearch.Columns[13].Visible = false;
+            this.dgvSearch.Columns[14].Visible = false;
 
-            this.dgvSearch.Columns["id"].Visible = false;
-            this.dgvSearch.Columns["creation_date"].Visible = false;
-            this.dgvSearch.Columns["creation_user_id"].Visible = false;
-            this.dgvSearch.Columns["creation_user_name"].Visible = false;
-            this.dgvSearch.Columns["change_date"].Visible = false;
-            this.dgvSearch.Columns["change_user_id"].Visible = false;
-            this.dgvSearch.Columns["change_user_name"].Visible = false;
+            this.dgvSearch.Columns[1].HeaderText = "Código";
+            this.dgvSearch.Columns[2].HeaderText = "Nome";
+            this.dgvSearch.Columns[3].HeaderText = "Nome Fantasia";
+            this.dgvSearch.Columns[4].HeaderText = "Data de Nascimento";
+            this.dgvSearch.Columns[5].HeaderText = "CPF/CNPJ";
+            this.dgvSearch.Columns[6].HeaderText = "Tipo de Pessoa";
+            this.dgvSearch.Columns[7].HeaderText = "Anotações";
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -117,19 +117,9 @@ namespace Xpto.UI.Customers
                 else
                 {
                     (dgvSearch.DataSource as DataTable).DefaultView.RowFilter =
-                        String.Format("Nome like '%" + txtName.Text + "%'");
+                        String.Format("name like '%" + txtName.Text + "%'");
                 }
             }
-        }
-
-        private void dgvSearch_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void mskCpf_KeyDown(object sender, KeyEventArgs e)
@@ -144,7 +134,26 @@ namespace Xpto.UI.Customers
                 else
                 {
                     (dgvSearch.DataSource as DataTable).DefaultView.RowFilter =
-                        String.Format("'CPF/CNPJ' like '%" + mskCpf.Text + "%'");
+                        String.Format("identity like '%" + mskCpf.Text.ToString() + "%'");
+
+                }
+            }
+        }
+
+        private void mskCnpj_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (string.IsNullOrEmpty(mskCnpj.Text))
+                {
+                    var msgText = "Insira algo para filtrar";
+                    MessageBox.Show(msgText, "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    (dgvSearch.DataSource as DataTable).DefaultView.RowFilter =
+                        String.Format("identity like '%" + mskCnpj.Text.ToString() + "%'");
+
                 }
             }
         }

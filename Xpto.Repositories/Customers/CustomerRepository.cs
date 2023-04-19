@@ -113,6 +113,7 @@ namespace Xpto.Repositories.Customers
             .AppendLine(" [nickname] = @nickname,")
             .AppendLine(" [birth_date] = @birth_date,")
             .AppendLine(" [person_type] = @person_type,")
+            .AppendLine(" [active] = '1',")
             .AppendLine(" [note] = @note,")
             .AppendLine(" [creation_date] = @creation_date,")
             .AppendLine(" [creation_user_id] = @creation_user_id,")
@@ -168,13 +169,32 @@ namespace Xpto.Repositories.Customers
 
             cm.Parameters.Add(new SqlParameter("@id", id));
 
-            var result = cm.ExecuteNonQuery();
+            cm.ExecuteNonQuery();
 
             connection.Close();
         }
 
-        
-        
+        public void SoftDelete(Guid id)
+        {
+            var commandText = new StringBuilder()
+            .AppendLine(" UPDATE [tb_customer]")
+            .AppendLine(" SET")
+            .AppendLine(" [active] = 0")
+            .AppendLine(" WHERE [id] = @id");
+
+            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
+            connection.Open();
+            var cm = connection.CreateCommand();
+
+            cm.CommandText = commandText.ToString();
+
+            cm.Parameters.Add(new SqlParameter("@id", id));
+
+            cm.ExecuteNonQuery();
+
+            cm.ExecuteNonQuery();
+
+        }
 
 
         public Customer Get(Guid id)
@@ -291,25 +311,25 @@ namespace Xpto.Repositories.Customers
 
         public DataTable LoadDataTable()
         {
-            //var customer = _customerRepository.Find();
-
             var commandTextCustomer = new StringBuilder()
                 .AppendLine(" SELECT")
                 .AppendLine(" A.[id],")
-                .AppendLine(" A.[code] AS Código,")
-                .AppendLine(" A.[name] AS Nome,")
-                .AppendLine(" A.[nickname] AS 'Nome Fantasia',")
-                .AppendLine(" A.[birth_date] AS 'Data de Nascimento',")
-                .AppendLine(" A.[identity] AS 'CPF/CNPJ',")
-                .AppendLine(" A.[person_type] AS 'Tipo de Pessoa',")
-                .AppendLine(" A.[note] AS 'Anotações',")
+                .AppendLine(" A.[code],")
+                .AppendLine(" A.[name],")
+                .AppendLine(" A.[nickname],")
+                .AppendLine(" A.[birth_date],")
+                .AppendLine(" A.[identity],")
+                .AppendLine(" A.[person_type],")
+                .AppendLine(" A.[note],")
+                .AppendLine(" A.[active],")
                 .AppendLine(" A.[creation_date],")
                 .AppendLine(" A.[creation_user_id],")
                 .AppendLine(" A.[creation_user_name],")
                 .AppendLine(" A.[change_date],")
                 .AppendLine(" A.[change_user_id],")
                 .AppendLine(" A.[change_user_name]")
-                .AppendLine(" FROM [tb_customer] AS A");
+                .AppendLine(" FROM [tb_customer] AS A")
+                .AppendLine(" WHERE [active] = 1");
 
             var connection = new SqlConnection(this._connectionProvider.ConnectionString);
             connection.Open();
@@ -328,6 +348,47 @@ namespace Xpto.Repositories.Customers
 
             return dataTable;
         }
+
+        public DataTable LoadDataTableDisabled()
+        {
+            var commandTextCustomer = new StringBuilder()
+                .AppendLine(" SELECT")
+                .AppendLine(" A.[id],")
+                .AppendLine(" A.[code],")
+                .AppendLine(" A.[name],")
+                .AppendLine(" A.[nickname],")
+                .AppendLine(" A.[birth_date],")
+                .AppendLine(" A.[identity],")
+                .AppendLine(" A.[person_type],")
+                .AppendLine(" A.[note],")
+                .AppendLine(" A.[active],")
+                .AppendLine(" A.[creation_date],")
+                .AppendLine(" A.[creation_user_id],")
+                .AppendLine(" A.[creation_user_name],")
+                .AppendLine(" A.[change_date],")
+                .AppendLine(" A.[change_user_id],")
+                .AppendLine(" A.[change_user_name]")
+                .AppendLine(" FROM [tb_customer] AS A")
+                .AppendLine(" WHERE [active] = 0");
+
+            var connection = new SqlConnection(this._connectionProvider.ConnectionString);
+            connection.Open();
+
+            var cm = connection.CreateCommand();
+
+            cm.CommandText = commandTextCustomer.ToString();
+
+            var da = new SqlDataAdapter(cm);
+
+            var dataTable = new DataTable();
+            da.Fill(dataTable);
+
+            connection.Close();
+            da.Dispose();
+
+            return dataTable;
+        }
+
 
         private static Customer LoadDataReader(SqlDataReader dataReader)
         {
@@ -382,6 +443,7 @@ namespace Xpto.Repositories.Customers
                 .AppendLine(" A.[nickname],")
                 .AppendLine(" A.[birth_date],")
                 .AppendLine(" A.[identity],")
+                .AppendLine(" A.[active],")
                 .AppendLine(" A.[person_type],")
                 .AppendLine(" A.[note],")
                 .AppendLine(" A.[creation_date],")
@@ -402,6 +464,7 @@ namespace Xpto.Repositories.Customers
             cm.Parameters.Add(new SqlParameter("@birth_date", customer.BirthDate.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@person_type", customer.PersonType.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@identity", customer.Identity.GetDbValue()));
+            cm.Parameters.Add(new SqlParameter("@active", customer.Active.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@note", customer.Note.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@creation_date", customer.CreationDate.GetDbValue()));
             cm.Parameters.Add(new SqlParameter("@creation_user_id", customer.CreationUserId.GetDbValue()));

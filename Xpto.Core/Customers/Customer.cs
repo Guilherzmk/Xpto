@@ -14,6 +14,7 @@ namespace Xpto.Core.Customers
         public DateTime? BirthDate { get; set; }
         public string PersonType { get; set; }
         public string Identity { get; set; }
+        public string Active { get; set; }
         public IList<Address> Addresses { get; set; }
         public IList<Phone> Phones { get; set; }
         public IList<Email> Emails { get; set; }

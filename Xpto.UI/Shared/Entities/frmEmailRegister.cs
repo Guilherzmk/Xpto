@@ -41,10 +41,10 @@ namespace Xpto.UI.Shared.Entities
             Action = ActionType.Create;
             this._email = new EmailParams();
 
-            _email.Type = txtType.Text;
+            _email.Type = cboType.Text;
             _email.Address = txtAddress.Text;
             _email.Note = txtNote.Text;
-           
+
             if (this._id != Guid.Empty)
                 this._email.Id = this._id;
 
@@ -89,7 +89,7 @@ namespace Xpto.UI.Shared.Entities
         public void LoadEmail(Email email)
         {
             this._id = email.Id;
-            this.txtType.Text = email.Type;
+            this.cboType.Text = email.Type;
             this.txtAddress.Text = email.Address;
             this.txtNote.Text = email.Note;
 

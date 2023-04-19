@@ -27,5 +27,11 @@ namespace Xpto.UI
             var frm = Program.ServiceProvider.GetRequiredService<frmCustomerSearch>();
             frm.Show(this);
         }
+
+        private void btnCustomerBin_Click(object sender, EventArgs e)
+        {
+            var frm = Program.ServiceProvider.GetRequiredService<frmCustomerBin>();
+            frm.Show(this);
+        }
     }
 }

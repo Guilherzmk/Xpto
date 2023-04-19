@@ -49,15 +49,16 @@
             lblNumber = new Label();
             txtStreet = new TextBox();
             lblStreet = new Label();
-            txtType = new TextBox();
             lblType = new Label();
             lblAddressRegister = new Label();
+            cboType = new ComboBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(37, 37, 37);
+            panel1.Controls.Add(cboType);
             panel1.Controls.Add(mskCep);
             panel1.Controls.Add(btnDelete);
             panel1.Controls.Add(btnClose);
@@ -77,7 +78,6 @@
             panel1.Controls.Add(lblNumber);
             panel1.Controls.Add(txtStreet);
             panel1.Controls.Add(lblStreet);
-            panel1.Controls.Add(txtType);
             panel1.Controls.Add(lblType);
             panel1.Location = new Point(-4, 66);
             panel1.Name = "panel1";
@@ -300,16 +300,6 @@
             lblStreet.TabIndex = 3;
             lblStreet.Text = "Rua:";
             // 
-            // txtType
-            // 
-            txtType.BackColor = Color.FromArgb(17, 17, 17);
-            txtType.BorderStyle = BorderStyle.FixedSingle;
-            txtType.ForeColor = SystemColors.Window;
-            txtType.Location = new Point(18, 103);
-            txtType.Name = "txtType";
-            txtType.Size = new Size(312, 23);
-            txtType.TabIndex = 2;
-            // 
             // lblType
             // 
             lblType.AutoSize = true;
@@ -331,6 +321,17 @@
             lblAddressRegister.Size = new Size(229, 58);
             lblAddressRegister.TabIndex = 1;
             lblAddressRegister.Text = "Endereço";
+            // 
+            // cboType
+            // 
+            cboType.BackColor = Color.FromArgb(17, 17, 17);
+            cboType.ForeColor = SystemColors.Window;
+            cboType.FormattingEnabled = true;
+            cboType.Items.AddRange(new object[] { "Residencial", "Comercial", "Rural", "Armazém", "Universidade", "Internacional" });
+            cboType.Location = new Point(19, 102);
+            cboType.Name = "cboType";
+            cboType.Size = new Size(308, 23);
+            cboType.TabIndex = 24;
             // 
             // frmAddressRegister
             // 
@@ -356,7 +357,6 @@
         private Panel panel1;
         private Label lblAddressRegister;
         private Label lblType;
-        private TextBox txtType;
         private Label lblState;
         private TextBox txtCity;
         private Label lblCity;
@@ -376,5 +376,6 @@
         private Button btnRegister;
         private Button btnDelete;
         private MaskedTextBox mskCep;
+        private ComboBox cboType;
     }
 }

@@ -8,7 +8,6 @@ namespace Xpto.Core.Shared.Types
 {
     public enum OnOffType
     {
-        None,
         On,
         Off
     }

@@ -50,6 +50,17 @@ namespace Xpto.Services.Customers
             }
         }
 
+        public void SoftDelete(Guid id)
+        {
+            var customer = _repository.Get(id);
+
+            if(customer != null)
+            {
+                _repository.SoftDelete(customer.Id);
+            }
+
+        }
+
         public Customer Get(Guid id)
         {
             var customer = _repository.Get(id);
@@ -75,6 +86,13 @@ namespace Xpto.Services.Customers
             var dt = _repository.LoadDataTable();
             return dt;
         }
+
+        public DataTable LoadDataTableDisabled()
+        {
+            var dt = _repository.LoadDataTableDisabled();
+            return dt;
+        }
+
 
     }
 }

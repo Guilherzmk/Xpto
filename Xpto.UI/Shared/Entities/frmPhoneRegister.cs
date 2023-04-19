@@ -45,9 +45,9 @@ namespace Xpto.UI.Shared.Entities
                 Action = ActionType.Create;
                 this._phone = new PhoneParams();
 
-                _phone.Type = txtType.Text;
+                _phone.Type = cboType.Text;
                 _phone.Ddd = Convert.ToInt32(mskNumber.Text.Substring(1, 2));
-                _phone.Number = Convert.ToInt64(mskNumber.Text.Substring(4, 5) + mskNumber.Text.Substring(10,4));
+                _phone.Number = Convert.ToInt64(mskNumber.Text.Substring(4, 5) + mskNumber.Text.Substring(10, 4));
                 _phone.Note = txtNote.Text;
 
                 if (this._id != Guid.Empty)
@@ -98,11 +98,11 @@ namespace Xpto.UI.Shared.Entities
         public void LoadPhone(Phone phone)
         {
             this._id = phone.Id;
-            this.txtType.Text = phone.Type;
-            var ddd = Convert.ToInt32(this.mskNumber.Text.Substring(1, 2));
-            ddd = phone.Ddd;
-            var number = Convert.ToInt64(mskNumber.Text.Substring(4, 5) + mskNumber.Text.Substring(10, 4));
-            number = phone.Number;
+            this.cboType.Text = phone.Type;
+            //var ddd = Convert.ToInt32(this.mskNumber.Text.Substring(1, 2));
+            this.mskNumber.Text = phone.ToString();
+            //var number = Convert.ToInt64(mskNumber.Text.Substring(4, 5) + mskNumber.Text.Substring(10, 4));
+           
             this.txtNote.Text = phone.Note;
         }
     }

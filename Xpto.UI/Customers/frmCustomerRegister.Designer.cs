@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerRegister));
             lblRegister = new Label();
             pnlRegister = new Panel();
+            mskBirthDate = new MaskedTextBox();
             mskIdentity = new MaskedTextBox();
             lvwEmail = new ListView();
             lvwPhone = new ListView();
@@ -45,7 +46,6 @@
             btnClose = new Button();
             btnRegister = new Button();
             cboPersonType = new ComboBox();
-            dtpBirthDate = new DateTimePicker();
             txtNote = new TextBox();
             lblNote = new Label();
             lblIdentity = new Label();
@@ -75,6 +75,7 @@
             // 
             pnlRegister.AutoSize = true;
             pnlRegister.BackColor = Color.FromArgb(37, 37, 37);
+            pnlRegister.Controls.Add(mskBirthDate);
             pnlRegister.Controls.Add(mskIdentity);
             pnlRegister.Controls.Add(lvwEmail);
             pnlRegister.Controls.Add(lvwPhone);
@@ -89,7 +90,6 @@
             pnlRegister.Controls.Add(btnClose);
             pnlRegister.Controls.Add(btnRegister);
             pnlRegister.Controls.Add(cboPersonType);
-            pnlRegister.Controls.Add(dtpBirthDate);
             pnlRegister.Controls.Add(txtNote);
             pnlRegister.Controls.Add(lblNote);
             pnlRegister.Controls.Add(lblIdentity);
@@ -105,15 +105,27 @@
             pnlRegister.Size = new Size(3679, 804);
             pnlRegister.TabIndex = 1;
             // 
+            // mskBirthDate
+            // 
+            mskBirthDate.BackColor = Color.FromArgb(17, 17, 17);
+            mskBirthDate.BorderStyle = BorderStyle.FixedSingle;
+            mskBirthDate.Font = new Font("Bahnschrift Condensed", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            mskBirthDate.ForeColor = SystemColors.Window;
+            mskBirthDate.Location = new Point(13, 196);
+            mskBirthDate.Mask = "00/00/0000";
+            mskBirthDate.Name = "mskBirthDate";
+            mskBirthDate.Size = new Size(312, 27);
+            mskBirthDate.TabIndex = 32;
+            // 
             // mskIdentity
             // 
             mskIdentity.BackColor = Color.FromArgb(17, 17, 17);
             mskIdentity.BorderStyle = BorderStyle.FixedSingle;
-            mskIdentity.Font = new Font("Bahnschrift Condensed", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            mskIdentity.Font = new Font("Bahnschrift Condensed", 12F, FontStyle.Regular, GraphicsUnit.Point);
             mskIdentity.ForeColor = SystemColors.Window;
             mskIdentity.Location = new Point(13, 326);
             mskIdentity.Name = "mskIdentity";
-            mskIdentity.Size = new Size(312, 23);
+            mskIdentity.Size = new Size(312, 27);
             mskIdentity.TabIndex = 31;
             // 
             // lvwEmail
@@ -273,31 +285,25 @@
             // cboPersonType
             // 
             cboPersonType.BackColor = Color.FromArgb(17, 17, 17);
+            cboPersonType.Font = new Font("Bahnschrift Condensed", 12F, FontStyle.Regular, GraphicsUnit.Point);
             cboPersonType.ForeColor = SystemColors.Window;
             cboPersonType.FormattingEnabled = true;
             cboPersonType.Items.AddRange(new object[] { "PF", "PJ" });
             cboPersonType.Location = new Point(13, 256);
             cboPersonType.Name = "cboPersonType";
-            cboPersonType.Size = new Size(312, 22);
+            cboPersonType.Size = new Size(312, 27);
             cboPersonType.TabIndex = 14;
             cboPersonType.SelectedIndexChanged += cboPersonType_SelectedIndexChanged;
-            // 
-            // dtpBirthDate
-            // 
-            dtpBirthDate.Location = new Point(13, 187);
-            dtpBirthDate.Name = "dtpBirthDate";
-            dtpBirthDate.Size = new Size(312, 22);
-            dtpBirthDate.TabIndex = 13;
-            dtpBirthDate.Value = new DateTime(2023, 3, 28, 18, 16, 47, 0);
             // 
             // txtNote
             // 
             txtNote.BackColor = Color.FromArgb(17, 17, 17);
             txtNote.BorderStyle = BorderStyle.FixedSingle;
+            txtNote.Font = new Font("Bahnschrift Condensed", 12F, FontStyle.Regular, GraphicsUnit.Point);
             txtNote.ForeColor = SystemColors.Window;
             txtNote.Location = new Point(13, 400);
             txtNote.Name = "txtNote";
-            txtNote.Size = new Size(312, 22);
+            txtNote.Size = new Size(312, 27);
             txtNote.TabIndex = 11;
             // 
             // lblNote
@@ -348,10 +354,11 @@
             // 
             txtNickname.BackColor = Color.FromArgb(17, 17, 17);
             txtNickname.BorderStyle = BorderStyle.FixedSingle;
+            txtNickname.Font = new Font("Bahnschrift Condensed", 12F, FontStyle.Regular, GraphicsUnit.Point);
             txtNickname.ForeColor = SystemColors.Window;
             txtNickname.Location = new Point(13, 115);
             txtNickname.Name = "txtNickname";
-            txtNickname.Size = new Size(312, 22);
+            txtNickname.Size = new Size(312, 27);
             txtNickname.TabIndex = 3;
             // 
             // lblNickname
@@ -369,10 +376,11 @@
             // 
             txtName.BackColor = Color.FromArgb(17, 17, 17);
             txtName.BorderStyle = BorderStyle.FixedSingle;
+            txtName.Font = new Font("Bahnschrift Condensed", 12F, FontStyle.Regular, GraphicsUnit.Point);
             txtName.ForeColor = SystemColors.Window;
             txtName.Location = new Point(13, 47);
             txtName.Name = "txtName";
-            txtName.Size = new Size(312, 22);
+            txtName.Size = new Size(312, 27);
             txtName.TabIndex = 1;
             // 
             // lblName
@@ -428,7 +436,6 @@
         private Label label1;
         private Label lblBirthDate;
         private Label lblNickname;
-        private Button btnRegister;
         private Button btnClose;
         private Label lblEmail;
         private Label label2;
@@ -438,14 +445,15 @@
         private Button btnAddAddress;
         private Label lblCode;
         public TextBox txtName;
-        public DateTimePicker dtpBirthDate;
         public TextBox txtNote;
         public TextBox txtNickname;
         public ComboBox cboPersonType;
-        private Button btnDelete;
         private ListView lvwAddress;
         private ListView lvwPhone;
         private ListView lvwEmail;
         private MaskedTextBox mskIdentity;
+        public Button btnRegister;
+        private MaskedTextBox mskBirthDate;
+        public Button btnDelete;
     }
 }
